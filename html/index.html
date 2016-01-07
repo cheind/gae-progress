@@ -1,5 +1,7 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
     <link href="style.css" rel="stylesheet">
@@ -11,27 +13,21 @@
     <div class="container" ng-controller="progressCtrl">
       <div class="page-header">
         <h1>Progresses</h1>
-        <p ng-class="{'bg-success':progressApiReady, 'bg-warning':!progressApiReady}">Backend {{progressApiReady | backendStatus}}</p>
+        <span ng-class="{'bg-success':progressApiReady, 'bg-warning':!progressApiReady}">Backend {{progressApiReady | backendStatus}}</span>
+      </div>
+      <div class="row" ng-repeat="progress in allProgresses">
+        <div class="col-md-4">{{progress.title}}</div>
+        <div class="col-md-4">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{progress.progress}}"
+                aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width:{{progress.progress}}%">{{progress.progress}}%
+            </div>
+          </div>
+        </div>
       </div>
       <div class="row">
         <div class="col-lg-10">
-          <table id="progressTable" class="table table-striped table-bordered table-hover">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Progress</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="progress in allProgresses">
-                <td>{{progress.title}}</td>
-                <td>
-                  <div class="progress-bar" role="progressbar" aria-valuenow="{{progress.progress}}"
-      aria-valuemin="0" aria-valuemax="100" style="width:{{progress.progress}}%">{{progress.progress}}%</div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <button type="button" class="btn btn-default" ng-click="listAllProgresses();" ng-init="count=0">Update</button>
         </div>
       </div>
     </div>
