@@ -26,5 +26,8 @@ class ProgressApi(remote.Service):
         my_progress.put()
         return my_progress
 
+    @Progress.query_method(path='list', name='progress.list', collection_fields=('id', 'title', 'progress'))
+    def listProgress(self, query):
+        return query
 
 APPLICATION = endpoints.api_server([ProgressApi], restricted=False)
