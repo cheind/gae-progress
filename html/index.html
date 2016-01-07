@@ -16,7 +16,7 @@
         <span ng-class="{'bg-success':progressApiReady, 'bg-warning':!progressApiReady}">Backend {{progressApiReady | backendStatus}}</span>
       </div>
       <div class="row" ng-repeat="progress in allProgresses">
-        <div class="col-md-4">{{progress.title}}</div>
+        <div class="col-md-2">{{progress.title}}</div>
         <div class="col-md-4">
           <div class="progress">
             <div class="progress-bar" role="progressbar" aria-valuenow="{{progress.progress}}"
@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-6">
           <button type="button" class="btn btn-default pull-right" ng-click="listAllProgresses();" ng-init="count=0">Update</button>
         </div>
       </div>
