@@ -12,7 +12,7 @@ class Progress(EndpointsModel):
 @endpoints.api(name='progressApi', version='v1', description='Monitor any progress.')
 class ProgressApi(remote.Service):
 
-    @Progress.method(path='create', http_method='POST', name='progress.create')
+    @Progress.method(path='create', http_method='POST', name='progress.create', request_fields=('title', 'progress'), response_fields=('id',))
     def createProgress(self, my_progress):
         my_progress.put()
         return my_progress
