@@ -1,5 +1,4 @@
 function init() {
-  console.log('init');
   angular.element(document).ready(function() {
     window.init();
   });
@@ -18,7 +17,6 @@ progressModule.controller('progressCtrl', function($scope) {
   window.init = function() {
     $scope.$apply($scope.loadProgressApi);
   };
-  console.log("in here");
   $scope.progressApiReady = false;
   $scope.allProgresses=[];
 

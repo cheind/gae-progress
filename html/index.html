@@ -1,6 +1,6 @@
 <html lang="en">
   <head>
-    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
     <link href="style.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
@@ -11,7 +11,7 @@
     <div class="container" ng-controller="progressCtrl">
       <div class="page-header">
         <h1>Progresses</h1>
-        <p>Backend {{progressApiReady | backendStatus}}</p>
+        <p ng-class="{'bg-success':progressApiReady, 'bg-warning':!progressApiReady}">Backend {{progressApiReady | backendStatus}}</p>
       </div>
       <div class="row">
         <div class="col-lg-10">
