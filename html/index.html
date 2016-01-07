@@ -25,7 +25,10 @@
         <tbody>
           <tr ng-repeat="progress in allProgresses">
             <td>{{progress.title}}</td>
-            <td>{{progress.progress}}</td>
+            <td>
+              <div class="progress-bar" role="progressbar" aria-valuenow="{{progress.progress}}"
+  aria-valuemin="0" aria-valuemax="100" style="width:{{progress.progress}}%">{{progress.progress}}%</div>
+            </td>
           </tr>
         </tbody>
       </table>
