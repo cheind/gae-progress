@@ -26,8 +26,14 @@ class ProgressApi(remote.Service):
         my_progress.put()
         return my_progress
 
-    @Progress.query_method(path='list', name='progress.list', collection_fields=('id', 'title', 'progress'))
+    @Progress.query_method(path='list', name='progress.list', collection_fields=('id', 'title', 'progress'), http_method='GET')
     def listProgress(self, query):
         return query
+
+    @Progress.method(path='get/{id}', name='progress.get', request_fields=('id',), http_method='GET')
+    def getProgress(self, my_progress):
+        if not my_progress.from_datastore:
+            raise endpoints.NotFoundException('Progress not found.')
+        return my_progress
 
 APPLICATION = endpoints.api_server([ProgressApi], restricted=False)
