@@ -2,12 +2,19 @@ import endpoints
 from protorpc import remote
 from google.appengine.ext import ndb
 from endpoints_proto_datastore.ndb import EndpointsModel
+from endpoints_proto_datastore.ndb import EndpointsAliasProperty
+
 
 class Progress(EndpointsModel):
     _message_fields_schema = ('id', 'title', 'progress', 'created')
     title = ndb.StringProperty(default='Untitled progress')
     progress = ndb.FloatProperty(default=0.0)
     created = ndb.DateTimeProperty(auto_now_add=True)
+
+    DEFAULT_ORDER = '-created'
+    @EndpointsAliasProperty(setter=EndpointsModel.OrderSet, default=DEFAULT_ORDER)
+    def order(self):
+        return super(Progress, self).order
 
 @endpoints.api(name='progressApi', version='v1', description='Monitor any progress.')
 class ProgressApi(remote.Service):
@@ -26,7 +33,7 @@ class ProgressApi(remote.Service):
         my_progress.put()
         return my_progress
 
-    @Progress.query_method(path='list', name='progress.list', collection_fields=('id', 'title', 'progress'), http_method='GET')
+    @Progress.query_method(path='list', name='progress.list', query_fields=('order', 'limit', 'pageToken',), collection_fields=('id', 'title', 'progress', 'created'), http_method='GET')
     def listProgress(self, query):
         return query
 

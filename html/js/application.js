@@ -26,7 +26,8 @@ progressModule.controller('progressCtrl', function($scope) {
   }
 
   $scope.listAllProgresses = function() {
-    gapi.client.progressApi.progress.list().execute(
+    var params = {'order': '-created'}
+    gapi.client.progressApi.progress.list(params).execute(
       function(resp){
         $scope.$apply(function() {
           $scope.allProgresses=resp.items;
