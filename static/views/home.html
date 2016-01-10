@@ -1,0 +1,39 @@
+<div class="container">
+
+  <div ng-if="!isSignedIn">
+    <div class="jumbotron">
+      <h2><i class="ion-stats-bars"></i> Progress</h2>
+      <p>To use Progress, please log in with your Google+ account.</p>
+      <p>
+        <a class="btn btn-lg btn-primary" ng-click="signIn(false)"><i class="ion-log-in"></i> Log in</a>
+      </p>
+    </div>
+  </div>
+
+  <div ng-if="isSignedIn">
+    <div class="row">
+      <h4>Your Progresses</h4>
+    </div>
+
+    <div class="row">
+      <div class="list-group col-md-8">
+        <a href="#" class="list-group-item" ng-repeat="progress in allProgresses" >
+          <h5 class="list-group-item-heading">{{progress.title}}</h5>
+            {{progress.progress}}% completed.
+            <div class="list-group-item-text progress">
+              <div class="progress-bar" role="progressbar" aria-valuenow="{{progress.progress}}"
+                  aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width:{{progress.progress}}%">{{progress.progress}}%
+              </div>
+            </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+        <button type="button" class="btn btn-primary pull-right" ng-click="listAllProgresses();" ng-init="count=0">Update</button>
+      </div>
+    </div>
+  </div>
+
+</div>
