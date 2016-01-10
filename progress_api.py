@@ -9,6 +9,7 @@ from endpoints_proto_datastore.ndb import EndpointsModel
 from endpoints_proto_datastore.ndb import EndpointsAliasProperty
 
 import uuid
+import md5
 from models import *
 from pprint import pprint
 
@@ -72,10 +73,11 @@ class ProgressApi(remote.Service):
         if (cu is None):
             raise endpoints.UnauthorizedException('Invalid token.')
 
-        u_key = ndb.Key(User, cu.email())
+        hmail = md5.new(cu.email()).hexdigest()
+        u_key = ndb.Key(User, hmail)
         u = u_key.get()
         if (u is None):
-            u = User(id=cu.email(), email=cu.email(), apikey=str(uuid.uuid4()))
+            u = User(id=hmail, email=cu.email(), apikey=str(uuid.uuid4()))
             u.put()
 
         return UserResponseMessage(email=u.email, apikey=u.apikey)
