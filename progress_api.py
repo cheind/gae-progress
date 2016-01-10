@@ -1,9 +1,16 @@
+
 import endpoints
+from protorpc import messages
+from protorpc import message_types
 from protorpc import remote
 from google.appengine.ext import ndb
+
 from endpoints_proto_datastore.ndb import EndpointsModel
 from endpoints_proto_datastore.ndb import EndpointsAliasProperty
+
 import uuid
+from models import *
+from pprint import pprint
 
 WEB_CLIENT_ID = '248701908744-ab1in98hrea09g6qe8nrofjsagurm362.apps.googleusercontent.com'
 
@@ -18,10 +25,6 @@ class Progress(EndpointsModel):
     @EndpointsAliasProperty(setter=EndpointsModel.OrderSet, default=DEFAULT_ORDER)
     def order(self):
         return super(Progress, self).order
-
-class User(EndpointsModel):
-    profile = ndb.UserProperty()
-    apikey = ndb.StringProperty()
 
 @endpoints.api(
     name='progressApi',
@@ -58,14 +61,23 @@ class ProgressApi(remote.Service):
             raise endpoints.NotFoundException('Progress not found.')
         return my_progress
 
-    @User.method(path='user', name='progress.user', user_required=True)
-    def getUser(self, my_user):
-        my_user.profile = endpoints.get_current_user()
+    @endpoints.method(
+        message_types.VoidMessage,
+        UserResponseMessage,
+        path='user',
+        name='progress.user',
+        http_method='GET')
+    def getUser(self, request):
+        cu = endpoints.get_current_user()
+        if (cu is None):
+            raise endpoints.UnauthorizedException('Invalid token.')
 
-        if not my_user.from_datastore:
-            my_user.apikey = str(uuid.uuid4())
+        u_key = ndb.Key(User, cu.email())
+        u = u_key.get()
+        if (u is None):
+            u = User(id=cu.email(), email=cu.email(), apikey=str(uuid.uuid4()))
+            u.put()
 
-        my_user.put()
-        return my_user
+        return UserResponseMessage(email=u.email, apikey=u.apikey)
 
 APPLICATION = endpoints.api_server([ProgressApi], restricted=False)

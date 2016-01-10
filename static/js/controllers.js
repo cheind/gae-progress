@@ -46,15 +46,14 @@ progressApp.controller('HomeCtrl', function($scope) {
 
 progressApp.controller('ProfileCtrl', function($scope) {
 
-  $scope.apikey = null;
-  $scope.profile = null;
+  $scope.user = {};
 
   $scope.getProfile = function() {
     gapi.client.progressApi.progress.user().execute(
       function(resp){
         $scope.$apply(function() {
-          $scope.apikey = resp.apikey;
-          $scope.profile = resp.profile;
+          $scope.user['email'] = resp.email;
+          $scope.user['apikey'] = resp.apikey;
         });
       });
   }
