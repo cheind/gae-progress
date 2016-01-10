@@ -45,23 +45,23 @@ progressApp.controller('HomeCtrl', function($scope) {
 });
 
 progressApp.controller('ProfileCtrl', function($scope) {
+
   $scope.apikey = null;
   $scope.profile = null;
 
   $scope.getProfile = function() {
-    if ($scope.isSignedIn) {
-      gapi.client.progressApi.progress.user().execute(
-        function(resp){
-          $scope.$apply(function() {
-            console.log(resp);
-            $scope.apikey = resp.apikey;
-            $scope.profile = resp.profile;
-          });
+    gapi.client.progressApi.progress.user().execute(
+      function(resp){
+        $scope.$apply(function() {
+          $scope.apikey = resp.apikey;
+          $scope.profile = resp.profile;
         });
-    }
+      });
   }
 
-  $scope.getProfile();
-
-
+  $scope.$watch('isSignedIn', function(newValue, oldValue) {
+    if (newValue) {
+      $scope.getProfile();
+    }
+  });
 });
