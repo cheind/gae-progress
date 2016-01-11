@@ -94,7 +94,12 @@ class ProgressApi(remote.Service):
         if (u is None):
             raise endpoints.UnauthorizedException('Not authorized.')
 
-        p = Progress(title=request.title, progress=request.progress, parent=u.key)
+        p = Progress(
+            title=request.title,
+            description=request.description,
+            progress=request.progress,
+            parent=u.key)
+
         k = p.put()
 
         return CreateProgressResponseMessage(id=k.id())
@@ -110,12 +115,15 @@ class ProgressApi(remote.Service):
         if (u is None):
             raise endpoints.UnauthorizedException('Not authorized.')
 
+        # Need to specify parent, as id is only unique in combination with
+        # a parent key
         p = Progress.get_by_id(request.id, parent=u.key)
         if (p is None):
             raise endpoints.NotFoundException('Progress with id %i not found' % request.id)
 
-        p.progress = request.progress or p.progress
+        p.description = request.description or p.description
         p.title = request.title or p.title
+        p.progress = request.progress or p.progress
         p.put()
 
         return message_types.VoidMessage()
@@ -133,7 +141,6 @@ class ProgressApi(remote.Service):
 
         q = Progress.query(ancestor=u.key)
         orderAttr = ndbAttributesFromString(request.order, Progress)
-        logging.info("Order: %s" % orderAttr)
         if (orderAttr is not None):
             q = q.order(*orderAttr)
 
@@ -154,6 +161,7 @@ class ProgressApi(remote.Service):
             prm = ProgressResponseMesssage(
                 id=pm.key.id(),
                 title=pm.title,
+                description=pm.description,
                 progress=pm.progress,
                 created=pm.created.strftime(DATETIME_STRING_FORMAT),
                 lastUpdated=pm.lastUpdated.strftime(DATETIME_STRING_FORMAT))

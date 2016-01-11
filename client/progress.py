@@ -41,7 +41,7 @@ def listProgresses(args):
 
 def createProgress(args):
     service = createService(args)
-    response = service.progress().create(body={'title':args.name, 'apikey':args.key}).execute()
+    response = service.progress().create(body={'title':args.name, 'description':args.desc, 'apikey':args.key}).execute()
     pprint.pprint(response)
 
 def simulateProgressUpdate(args):
@@ -60,6 +60,7 @@ def main():
 
      parserCreateProgress = subparsers.add_parser('create')
      parserCreateProgress.add_argument('--name')
+     parserCreateProgress.add_argument('--desc')
      parserCreateProgress.add_argument('--url', default='http://localhost:8080')
      parserCreateProgress.add_argument('--key', required=True)
      parserCreateProgress.set_defaults(func=createProgress)

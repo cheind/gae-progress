@@ -36,7 +36,7 @@ progressApp.controller('HomeCtrl', function($scope) {
       var params = {
         'limit': 5,
         'pageToken': args['token'],
-        'order' : args['order'] || '-created'
+        'order' : args['order'] || '-lastUpdated'
       }
       gapi.client.progressApi.progress.list(params).execute(
         function(resp){
@@ -54,11 +54,11 @@ progressApp.controller('HomeCtrl', function($scope) {
     }
 
     $scope.nextProgresses = function(args) {
-      $scope.listProgresses({'token': $scope.nextPageToken, 'order': '-created'});
+      $scope.listProgresses({'token': $scope.nextPageToken});
     }
 
     $scope.previousProgresses = function(args) {
-      $scope.listProgresses({'token': $scope.prevPageToken, 'order': '-created'});
+      $scope.listProgresses({'token': $scope.prevPageToken});
     }
 
     $scope.$watch('isSignedIn', function(newValue, oldValue) {
