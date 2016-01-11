@@ -15,18 +15,7 @@ from models import *
 from pprint import pprint
 
 WEB_CLIENT_ID = '248701908744-ab1in98hrea09g6qe8nrofjsagurm362.apps.googleusercontent.com'
-
-
-class Progress(EndpointsModel):
-    _message_fields_schema = ('id', 'title', 'progress', 'created')
-    title = ndb.StringProperty(default='Untitled progress')
-    progress = ndb.FloatProperty(default=0.0)
-    created = ndb.DateTimeProperty(auto_now_add=True)
-
-    DEFAULT_ORDER = '-created'
-    @EndpointsAliasProperty(setter=EndpointsModel.OrderSet, default=DEFAULT_ORDER)
-    def order(self):
-        return super(Progress, self).order
+DATETIME_STRING_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
 
 @endpoints.api(
     name='progressApi',
@@ -36,33 +25,6 @@ class Progress(EndpointsModel):
     scopes=[endpoints.EMAIL_SCOPE],)
 class ProgressApi(remote.Service):
 
-    @Progress.method(path='create', http_method='POST', name='progress.create', request_fields=('title', 'progress'), response_fields=('id',))
-    def createProgress(self, my_progress):
-        my_progress.put()
-        return my_progress
-
-    @Progress.method(
-        path='update',
-        http_method='POST',
-        name='progress.update',)
-    def updateProgress(self, my_progress):
-        if not my_progress.from_datastore:
-            my_id = my_progress.id
-            raise endpoints.BadRequestException('Progress %d does not exists.' % (my_id,))
-
-        my_progress.put()
-        return my_progress
-
-    @Progress.query_method(path='list', name='progress.list', query_fields=('order', 'limit', 'pageToken',), collection_fields=('id', 'title', 'progress', 'created'), http_method='GET')
-    def listProgress(self, query):
-        return query
-
-    @Progress.method(path='get/{id}', name='progress.get', request_fields=('id',), http_method='GET')
-    def getProgress(self, my_progress):
-        if not my_progress.from_datastore:
-            raise endpoints.NotFoundException('Progress not found.')
-        return my_progress
-
     @classmethod
     def generateApiKey(cls, hmail):
         return '%s-%s' % (hmail, str(uuid.uuid4()))
@@ -71,10 +33,32 @@ class ProgressApi(remote.Service):
     def splitApiKey(cls, apikey):
         if (apikey is not None):
             parts = apikey.split('-')
-            print parts
             if (len(parts) == 6):
                 return parts[0], '-'.join(parts[1:])
 
+    def getUserKeyFromAuth(self):
+        cu = endpoints.get_current_user()
+        if (cu is not None):
+            hmail = hashlib.md5(cu.email()).hexdigest()
+            return ndb.Key(User, hmail)
+
+    def getUserKeyFromApiKey(self, apikey):
+        if (apikey is not None):
+            hmail, verification = ProgressApi.splitApiKey(apikey)
+            if (hmail is not None):
+                return ndb.Key(User, hmail)
+
+    def getUserFromAuthOrApiKey(self, apikey):
+        if (apikey is not None):
+            k = self.getUserKeyFromApiKey(apikey)
+            if (k is not None):
+                u = k.get()
+                if (u is not None and u.apikey == apikey):
+                    return u
+        else:
+            k = self.getUserKeyFromAuth()
+            if (k is not None):
+                return k.get()
 
     @endpoints.method(
         message_types.VoidMessage,
@@ -82,7 +66,7 @@ class ProgressApi(remote.Service):
         path='user',
         name='progress.user',
         http_method='GET')
-    def getUser(self, request):
+    def getUserProfile(self, request):
         cu = endpoints.get_current_user()
         if (cu is None):
             raise endpoints.UnauthorizedException('Invalid token.')
@@ -95,5 +79,68 @@ class ProgressApi(remote.Service):
             u.put()
 
         return UserResponseMessage(email=u.email, apikey=u.apikey)
+
+    @endpoints.method(
+        CreateProgressRequestMessage,
+        CreateProgressResponseMessage,
+        path='create',
+        name='progress.create',
+        http_method='POST')
+    def createProgress(self, request):
+        u = self.getUserFromAuthOrApiKey(request.apikey)
+        if (u is None):
+            raise endpoints.UnauthorizedException('Not authorized.')
+
+        p = Progress(title=request.title, progress=request.progress, parent=u.key)
+        k = p.put()
+
+        return CreateProgressResponseMessage(id=k.id())
+
+    @endpoints.method(
+        UpdateProgressRequestMessage,
+        message_types.VoidMessage,
+        path='update',
+        name='progress.update',
+        http_method='POST')
+    def updateProgress(self, request):
+        u = self.getUserFromAuthOrApiKey(request.apikey)
+        if (u is None):
+            raise endpoints.UnauthorizedException('Not authorized.')
+
+        p = Progress.get_by_id(request.id, parent=u.key)
+        if (p is None):
+            raise endpoints.NotFoundException('Progress with id %i not found' % request.id)
+
+        p.progress = request.progress or p.progress
+        p.title = request.title or p.title
+        p.put()
+
+        return message_types.VoidMessage()
+
+    @endpoints.method(
+        message_types.VoidMessage,
+        QueryProgressResponseMessage,
+        path='list',
+        name='progress.list',
+        http_method='GET')
+    def queryProgresses(self, request):
+        u = self.getUserFromAuthOrApiKey(None)
+        if (u is None):
+            raise endpoints.UnauthorizedException('Not authorized.')
+
+        q = Progress.queryProgressesFromUser(u.key)
+        ps = []
+        for pm in q.fetch(10):
+            prm = ProgressResponseMesssage(
+                id=pm.key.id(),
+                title=pm.title,
+                progress=pm.progress,
+                created=pm.created.strftime(DATETIME_STRING_FORMAT),
+                lastUpdated=pm.lastUpdated.strftime(DATETIME_STRING_FORMAT))
+            ps.append(prm)
+
+        return QueryProgressResponseMessage(items=ps)
+
+
 
 APPLICATION = endpoints.api_server([ProgressApi], restricted=False)

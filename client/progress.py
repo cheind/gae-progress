@@ -41,12 +41,12 @@ def listProgresses(args):
 
 def createProgress(args):
     service = createService(args)
-    response = service.progress().create(body={'title':args.name}).execute()
+    response = service.progress().create(body={'title':args.name, 'apikey':args.key}).execute()
     pprint.pprint(response)
 
 def simulateProgressUpdate(args):
     service = createService(args)
-    param = {'id':args.id}
+    param = {'id':args.id, 'apikey':args.key}
     for x in range(0, 100):
         param['progress'] = x
         response = service.progress().update(body=param).execute()
@@ -56,17 +56,23 @@ def simulateProgressUpdate(args):
 
 def main():
      parser = argparse.ArgumentParser(add_help=True)
-     parser.add_argument('--url', default='http://localhost:8080')
-
      subparsers = parser.add_subparsers()
 
      parserCreateProgress = subparsers.add_parser('create')
      parserCreateProgress.add_argument('--name')
+     parserCreateProgress.add_argument('--url', default='http://localhost:8080')
+     parserCreateProgress.add_argument('--key', required=True)
      parserCreateProgress.set_defaults(func=createProgress)
+
      parserSimulateProgress = subparsers.add_parser('simulate')
      parserSimulateProgress.add_argument('--id', type=int, required=True)
+     parserSimulateProgress.add_argument('--url', default='http://localhost:8080')
+     parserSimulateProgress.add_argument('--key', required=True)
      parserSimulateProgress.set_defaults(func=simulateProgressUpdate)
+
      parserSimulateProgress = subparsers.add_parser('list')
+     parserSimulateProgress.add_argument('--url', default='http://localhost:8080')
+     parserSimulateProgress.add_argument('--key', required=True)
      parserSimulateProgress.set_defaults(func=listProgresses)
 
      args = parser.parse_args()
