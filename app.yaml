@@ -9,6 +9,7 @@ handlers:
 - url: /
   static_files: static/index.html
   upload: static/index.html
+  secure: always
 
 - url: /js/(.+)
   static_files: static/js/\1
@@ -25,10 +26,12 @@ handlers:
   # Endpoints handler: Must be /_ah/spi. Apps send requests to /_ah/api, but these are handled at /_ah/spi!!
 - url: /_ah/spi/.*
   script: progress_api.APPLICATION
+  secure: always
 
 - url: /(.+)
   static_files: static/index.html
   upload: static/index.html
+  secure: always
 
 
 

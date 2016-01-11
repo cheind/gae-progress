@@ -50,7 +50,7 @@ def simulateProgressUpdate(args):
     for x in range(0, 100):
         param['progress'] = x
         response = service.progress().update(body=param).execute()
-        print x
+        print '.',
         time.sleep(0.5)
 
 
