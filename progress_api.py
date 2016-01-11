@@ -8,8 +8,9 @@ from google.appengine.ext import ndb
 from endpoints_proto_datastore.ndb import EndpointsModel
 from endpoints_proto_datastore.ndb import EndpointsAliasProperty
 
+import logging
 import uuid
-import md5
+import hashlib
 from models import *
 from pprint import pprint
 
@@ -62,6 +63,19 @@ class ProgressApi(remote.Service):
             raise endpoints.NotFoundException('Progress not found.')
         return my_progress
 
+    @classmethod
+    def generateApiKey(cls, hmail):
+        return '%s-%s' % (hmail, str(uuid.uuid4()))
+
+    @classmethod
+    def splitApiKey(cls, apikey):
+        if (apikey is not None):
+            parts = apikey.split('-')
+            print parts
+            if (len(parts) == 6):
+                return parts[0], '-'.join(parts[1:])
+
+
     @endpoints.method(
         message_types.VoidMessage,
         UserResponseMessage,
@@ -73,11 +87,11 @@ class ProgressApi(remote.Service):
         if (cu is None):
             raise endpoints.UnauthorizedException('Invalid token.')
 
-        hmail = md5.new(cu.email()).hexdigest()
+        hmail = hashlib.md5(cu.email()).hexdigest()
         u_key = ndb.Key(User, hmail)
         u = u_key.get()
         if (u is None):
-            u = User(id=hmail, email=cu.email(), apikey=str(uuid.uuid4()))
+            u = User(id=hmail, email=cu.email(), apikey=ProgressApi.generateApiKey(hmail))
             u.put()
 
         return UserResponseMessage(email=u.email, apikey=u.apikey)
