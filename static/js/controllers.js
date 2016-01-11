@@ -87,4 +87,15 @@ progressApp.controller('ProfileCtrl', function($scope) {
       $scope.getProfile();
     }
   });
+
+  $scope.newApiKey = function() {
+    gapi.client.progressApi.progress.generateNewApiKey().execute(
+      function(resp){
+        $scope.$apply(function() {
+          $scope.user['email'] = resp.email;
+          $scope.user['apikey'] = resp.apikey;
+        });
+      });
+  }
+
 });

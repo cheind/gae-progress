@@ -84,6 +84,23 @@ class ProgressApi(remote.Service):
         return UserResponseMessage(email=u.email, apikey=u.apikey)
 
     @endpoints.method(
+        message_types.VoidMessage,
+        UserResponseMessage,
+        path='generateNewApiKey',
+        name='progress.generateNewApiKey',
+        http_method='GET')
+    def generateNewApiKey(self, request):
+        u = self.getUserFromAuthOrApiKey(None)
+
+        if (u is None):
+            raise endpoints.UnauthorizedException('Not authorized.')
+
+        u.apikey = ProgressApi.generateApiKey(u.key.id())
+        u.put()
+
+        return UserResponseMessage(email=u.email, apikey=u.apikey)
+
+    @endpoints.method(
         CreateProgressRequestMessage,
         CreateProgressResponseMessage,
         path='create',
