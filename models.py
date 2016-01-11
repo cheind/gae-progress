@@ -16,10 +16,6 @@ class Progress(ndb.Model):
     created = ndb.DateTimeProperty(auto_now_add=True)
     lastUpdated = ndb.DateTimeProperty(auto_now=True)
 
-    @classmethod
-    def queryProgressesFromUser(cls, userKey):
-        return cls.query(ancestor=userKey).order(-cls.created)
-
 class CreateProgressRequestMessage(messages.Message):
     title = messages.StringField(1, default='Untitled progress')
     progress = messages.FloatField(2, default=0.0)
@@ -35,8 +31,16 @@ class ProgressResponseMesssage(messages.Message):
     created = messages.StringField(4)
     lastUpdated = messages.StringField(5)
 
+class QueryProgressRequestMessage(messages.Message):
+    limit = messages.IntegerField(1, default=10)
+    order = messages.StringField(2, default='-created')
+    pageToken = messages.StringField(3)
+
 class QueryProgressResponseMessage(messages.Message):
     items = messages.MessageField(ProgressResponseMesssage, 1, repeated=True)
+    thisPageToken = messages.StringField(2)
+    prevPageToken = messages.StringField(3)
+    nextPageToken = messages.StringField(4)
 
 class UpdateProgressRequestMessage(messages.Message):
     id = messages.IntegerField(1, required=True)

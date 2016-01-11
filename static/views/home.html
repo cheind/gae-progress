@@ -12,30 +12,55 @@
 
   <div ng-if="isSignedIn">
     <div class="row">
-      <h5>Your Progresses</h5>
-    </div>
-
-    <div class="row">
-      <div class="col-md-8">
-        <div class="list-group">
-          <a href="#" class="list-group-item" ng-repeat="progress in allProgresses" >
-            <h5 class="list-group-item-heading">{{progress.title}}</h5>
-              {{progress.progress}}% completed.
-              <div class="list-group-item-text progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="{{progress.progress}}"
-                    aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width:{{progress.progress}}%">{{progress.progress}}%
-                </div>
-              </div>
-          </a>
+      <div class="col-md-2"><h5>Your Progresses</h5></div>
+      <div class="col-md-6">
+        <div class="btn-toolbar pull-right" role="group" aria-label="...">
+          <button type="button" class="btn btn-default" ng-click="refreshProgresses()">Refresh</button>
+          <!--<button type="button" class="btn btn-primary" ng-click="">Create New</button>-->
         </div>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-8">
-        <div class="btn-group pull-right" role="group" aria-label="...">
-          <button type="button" class="btn btn-default" ng-click="listAllProgresses();">Refresh</button>
-          <button type="button" class="btn btn-primary" ng-click="listAllProgresses();">Create New</button>
+        <div class="list-group">
+          <div class="list-group-item" ng-repeat="progress in progresses" >
+            <div class="row">
+              <div class="col-md-6">
+                <h5 class="list-group-item-heading">{{progress.title}}</h5>
+              </div>
+              <div class="col-md-6">
+                <div class="text-right">
+                  {{progress.progress}}% completed.
+                </div>
+              </div>
+            </div>
+            <div class="list-group-item-text">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="{{progress.progress}}"
+                        aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width:{{progress.progress}}%">{{progress.progress}}%
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="text-right">
+                    Id {{progress.id}}<br> Updated {{progress.lastUpdated | timeago}} ago
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+        <div class="btn-toolbar pull-right" role="group" aria-label="...">
+          <button type="button" class="btn btn-default" ng-disabled="!prevPageToken" ng-click="previousProgresses()">Previous</button>
+          <button type="button" class="btn btn-default" ng-disabled="!nextPageToken" ng-click="nextProgresses()">Next</button>
         </div>
       </div>
     </div>

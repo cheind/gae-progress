@@ -4,6 +4,7 @@ from protorpc import messages
 from protorpc import message_types
 from protorpc import remote
 from google.appengine.ext import ndb
+from google.appengine.datastore import datastore_query
 
 from endpoints_proto_datastore.ndb import EndpointsModel
 from endpoints_proto_datastore.ndb import EndpointsAliasProperty
@@ -12,10 +13,12 @@ import logging
 import uuid
 import hashlib
 from models import *
+from utils import ndbAttributesFromString
 from pprint import pprint
 
 WEB_CLIENT_ID = '248701908744-ab1in98hrea09g6qe8nrofjsagurm362.apps.googleusercontent.com'
 DATETIME_STRING_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
+QUERY_LIMIT_MAX = 100
 
 @endpoints.api(
     name='progressApi',
@@ -118,7 +121,7 @@ class ProgressApi(remote.Service):
         return message_types.VoidMessage()
 
     @endpoints.method(
-        message_types.VoidMessage,
+        QueryProgressRequestMessage,
         QueryProgressResponseMessage,
         path='list',
         name='progress.list',
@@ -128,9 +131,26 @@ class ProgressApi(remote.Service):
         if (u is None):
             raise endpoints.UnauthorizedException('Not authorized.')
 
-        q = Progress.queryProgressesFromUser(u.key)
+        q = Progress.query(ancestor=u.key)
+        orderAttr = ndbAttributesFromString(request.order, Progress)
+        logging.info("Order: %s" % orderAttr)
+        if (orderAttr is not None):
+            q = q.order(*orderAttr)
+
+
+        qopts = {}
+        if (request.pageToken is not None):
+            cursor = datastore_query.Cursor.from_websafe_string(request.pageToken)
+            qopts['start_cursor'] = cursor
+
+        limit = request.limit or 10
+        limit = max(1, min(limit, QUERY_LIMIT_MAX))
+        items, cursor, moreResults = q.fetch_page(limit, **qopts)
+        if not moreResults:
+          cursor = None
+
         ps = []
-        for pm in q.fetch(10):
+        for pm in items:
             prm = ProgressResponseMesssage(
                 id=pm.key.id(),
                 title=pm.title,
@@ -139,8 +159,9 @@ class ProgressApi(remote.Service):
                 lastUpdated=pm.lastUpdated.strftime(DATETIME_STRING_FORMAT))
             ps.append(prm)
 
-        return QueryProgressResponseMessage(items=ps)
-
-
+        thisToken = request.pageToken
+        nextToken = cursor.to_websafe_string() if cursor else None
+        prevToken = cursor.reversed().to_websafe_string() if cursor else None
+        return QueryProgressResponseMessage(items=ps, thisPageToken=thisToken, nextPageToken=nextToken, prevPageToken=None)
 
 APPLICATION = endpoints.api_server([ProgressApi], restricted=False)

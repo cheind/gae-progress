@@ -18,6 +18,39 @@ progressApp.config(function($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
 })
 
+progressApp.filter('timeago', function() {
+  return function(dateString) {
+    var seconds = Math.floor((new Date() - new Date(dateString)) / 1000);
+    var interval = Math.floor(seconds / 31536000);
+
+    if (interval > 1) {
+      return interval + " years";
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) {
+      return interval + " months";
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) {
+      return interval + " days";
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) {
+      return interval + " hours";
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) {
+      return interval + " minutes";
+    }
+
+    if (seconds < 10) {
+      return "moments";
+    } else {
+      return Math.floor(seconds) + " seconds";
+    }
+  }
+});
+
 progressApp.factory('oauth2Provider', function() {
 
   var oauth2Provider = {

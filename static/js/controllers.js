@@ -25,21 +25,45 @@ progressApp.controller('RootCtrl', function($scope, oauth2Provider) {
 });
 
 progressApp.controller('HomeCtrl', function($scope) {
-    $scope.allProgresses = [];
+    $scope.progresses = [];
+    $scope.thisPageToken = null;
+    $scope.nextPageToken = null;
+    $scope.prevPageToken = null;
 
-    $scope.listAllProgresses = function() {
-      var params = {'order': '-created'}
+    $scope.listProgresses = function(args) {
+      if (typeof(args)==='undefined') args = {};
+
+      var params = {
+        'limit': 5,
+        'pageToken': args['token'],
+        'order' : args['order'] || '-created'
+      }
       gapi.client.progressApi.progress.list(params).execute(
         function(resp){
           $scope.$apply(function() {
-            $scope.allProgresses=resp.items;
+            $scope.progresses = resp.items;
+            $scope.thisPageToken = resp.thisPageToken;
+            $scope.nextPageToken = resp.nextPageToken;
+            $scope.prevPageToken = resp.prevPageToken;
           });
         });
     }
 
+    $scope.refreshProgresses = function(args) {
+      $scope.listProgresses({'token': $scope.thisPageToken});
+    }
+
+    $scope.nextProgresses = function(args) {
+      $scope.listProgresses({'token': $scope.nextPageToken, 'order': '-created'});
+    }
+
+    $scope.previousProgresses = function(args) {
+      $scope.listProgresses({'token': $scope.prevPageToken, 'order': '-created'});
+    }
+
     $scope.$watch('isSignedIn', function(newValue, oldValue) {
       if (newValue) {
-        $scope.listAllProgresses();
+        $scope.listProgresses();
       }
     });
 });
