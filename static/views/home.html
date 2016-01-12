@@ -25,7 +25,6 @@
       <div class="col-md-8 col-xs-8">
         <div class="list-group">
           <div class="list-group-item" ng-repeat="progress in progresses" >
-
             <h5 class="list-group-item-heading">{{progress.title}}</h5>
             <p class="list-group-item-text">{{progress.description}}</p>
             <div class="progress" style="margin: 8px 0px 0px 0px;">
@@ -36,22 +35,19 @@
             <p class="list-group-item-text">
               <small>{{progress.progress}}% completed, updated {{progress.lastUpdated | timeago}} ago, ID {{progress.id}}</small>
             </p>
-
-            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!--
+
     <div class="row">
       <div class="col-md-8 col-xs-8">
         <div class="btn-toolbar pull-right" role="group" aria-label="...">
-          <button type="button" class="btn btn-default" ng-disabled="!prevPageToken" ng-click="previousProgresses()">Previous</button>
           <button type="button" class="btn btn-default" ng-disabled="!nextPageToken" ng-click="nextProgresses()">Next</button>
         </div>
       </div>
-    </div>-->
+    </div>
   </div>
 
 </div>

@@ -26,16 +26,15 @@ progressApp.controller('RootCtrl', function($scope, oauth2Provider) {
 
 progressApp.controller('HomeCtrl', function($scope, $location) {
     $scope.progresses = [];
-    $scope.thisPageToken = null;
     $scope.nextPageToken = null;
-    $scope.prevPageToken = null;
+    $scope.thisPageToken = null;
 
     $scope.listProgresses = function(args) {
       if (typeof(args)==='undefined') args = {};
 
       var params = {
         'limit': 5,
-        'pageToken': args['token'],
+        'pageToken': args['pageToken'],
         'order' : args['order'] || '-lastUpdated'
       }
       gapi.client.progressApi.progress.list(params).execute(
@@ -44,21 +43,16 @@ progressApp.controller('HomeCtrl', function($scope, $location) {
             $scope.progresses = resp.items;
             $scope.thisPageToken = resp.thisPageToken;
             $scope.nextPageToken = resp.nextPageToken;
-            $scope.prevPageToken = resp.prevPageToken;
           });
         });
     }
 
     $scope.refreshProgresses = function(args) {
-      $scope.listProgresses({'token': $scope.thisPageToken});
+      $scope.listProgresses({'pageToken': $scope.thisPageToken});
     }
 
     $scope.nextProgresses = function(args) {
-      $scope.listProgresses({'token': $scope.nextPageToken});
-    }
-
-    $scope.previousProgresses = function(args) {
-      $scope.listProgresses({'token': $scope.prevPageToken});
+      $scope.listProgresses({'pageToken': $scope.nextPageToken});
     }
 
     $scope.showCreate = function() {

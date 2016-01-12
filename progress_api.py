@@ -179,9 +179,7 @@ class ProgressApi(remote.Service):
                 lastUpdated=pm.lastUpdated.strftime(DATETIME_STRING_FORMAT))
             ps.append(prm)
 
-        thisToken = request.pageToken
         nextToken = cursor.to_websafe_string() if cursor else None
-        prevToken = cursor.reversed().to_websafe_string() if cursor else None
-        return QueryProgressResponseMessage(items=ps, thisPageToken=thisToken, nextPageToken=nextToken, prevPageToken=None)
+        return QueryProgressResponseMessage(items=ps, nextPageToken=nextToken, thisPageToken=request.pageToken)
 
 APPLICATION = endpoints.api_server([ProgressApi], restricted=False)

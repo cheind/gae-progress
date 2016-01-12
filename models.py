@@ -43,8 +43,7 @@ class QueryProgressRequestMessage(messages.Message):
 class QueryProgressResponseMessage(messages.Message):
     items = messages.MessageField(ProgressResponseMesssage, 1, repeated=True)
     thisPageToken = messages.StringField(2)
-    prevPageToken = messages.StringField(3)
-    nextPageToken = messages.StringField(4)
+    nextPageToken = messages.StringField(3)
 
 class UpdateProgressRequestMessage(messages.Message):
     id = messages.IntegerField(1, required=True)
