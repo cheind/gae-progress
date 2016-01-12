@@ -26,8 +26,12 @@
             <h3 class="panel-title">API Key</h3>
           </div>
           <div class="panel-body">
-            <p>{{user.apikey}}</p>
-            <button type="button" class="btn btn-default pull-right" style="display:inline;" ng-click="newApiKey()">New Key</button>
+            <div class="form-inline">
+              <div class="form-group">
+                {{user.apikey}}
+                <button type="button" class="btn btn-default" ng-click="newApiKey()">New Key</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
