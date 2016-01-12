@@ -24,7 +24,7 @@ progressApp.config(function($routeProvider, $locationProvider) {
 
 progressApp.filter('timeago', function() {
   return function(dateString) {
-    var seconds = Math.floor((new Date() - new Date(dateString)) / 1000);
+    var seconds = Math.floor((new Date(new Date().toUTCString()) - new Date(dateString)) / 1000);
     var interval = Math.floor(seconds / 31536000);
 
     if (interval > 1) {
