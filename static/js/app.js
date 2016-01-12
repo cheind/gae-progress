@@ -9,6 +9,10 @@ progressApp.config(function($routeProvider, $locationProvider) {
       templateUrl: '/views/profile.html',
       controller: 'ProfileCtrl'
     }).
+    when('/create', {
+      templateUrl: '/views/create.html',
+      controller: 'CreateCtrl'
+    }).
     when('/', {
       templateUrl: '/views/home.html',
       controller: 'HomeCtrl'
@@ -77,12 +81,10 @@ progressApp.factory('oauth2Provider', function() {
       contentType: "application/json",
       dataType: 'jsonp',
       success: function(nullResponse) {
-        console.log('disconnected');
         // Do something now that user is disconnected
         // The response is always undefined.
       },
       error: function(e) {
-        console.log('failed');
         // Handle the error
         // console.log(e);
         // You could point users to manually disconnect if unsuccessful

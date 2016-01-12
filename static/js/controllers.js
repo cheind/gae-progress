@@ -24,7 +24,7 @@ progressApp.controller('RootCtrl', function($scope, oauth2Provider) {
 
 });
 
-progressApp.controller('HomeCtrl', function($scope) {
+progressApp.controller('HomeCtrl', function($scope, $location) {
     $scope.progresses = [];
     $scope.thisPageToken = null;
     $scope.nextPageToken = null;
@@ -59,6 +59,10 @@ progressApp.controller('HomeCtrl', function($scope) {
 
     $scope.previousProgresses = function(args) {
       $scope.listProgresses({'token': $scope.prevPageToken});
+    }
+
+    $scope.showCreate = function() {
+      $location.path('/create');
     }
 
     $scope.$watch('isSignedIn', function(newValue, oldValue) {
@@ -97,5 +101,21 @@ progressApp.controller('ProfileCtrl', function($scope) {
         });
       });
   }
+
+});
+
+progressApp.controller('CreateCtrl', function($scope, $location) {
+  $scope.master = {};
+
+  $scope.create = function(progress) {
+     $scope.master = angular.copy(progress);
+     gapi.client.progressApi.progress.create(progress).execute(
+       function(resp){
+         $scope.$apply(function() {
+           $location.path("/");
+         });
+       });
+  };
+
 
 });

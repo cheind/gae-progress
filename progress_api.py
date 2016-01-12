@@ -37,31 +37,30 @@ class ProgressApi(remote.Service):
         if (apikey is not None):
             parts = apikey.split('-')
             if (len(parts) == 6):
-                return parts[0], '-'.join(parts[1:])
+                return parts[0]
 
-    def getUserKeyFromAuth(self):
-        cu = endpoints.get_current_user()
-        if (cu is not None):
-            hmail = hashlib.md5(cu.email()).hexdigest()
-            return ndb.Key(User, hmail)
-
-    def getUserKeyFromApiKey(self, apikey):
+    def getUserFromApiKey(self, apikey):
         if (apikey is not None):
-            hmail, verification = ProgressApi.splitApiKey(apikey)
+            hmail = ProgressApi.splitApiKey(apikey)
             if (hmail is not None):
-                return ndb.Key(User, hmail)
+                return ndb.Key(User, hmail).get()
 
-    def getUserFromAuthOrApiKey(self, apikey):
+    def getUser(self, apikey=None, createNew=True):
+        u = None
         if (apikey is not None):
-            k = self.getUserKeyFromApiKey(apikey)
-            if (k is not None):
-                u = k.get()
-                if (u is not None and u.apikey == apikey):
-                    return u
+            u = self.getUserFromApiKey(apikey)
+            if (u is not None and u.apikey != apikey):
+                u = None
         else:
-            k = self.getUserKeyFromAuth()
-            if (k is not None):
-                return k.get()
+            cu = endpoints.get_current_user()
+            if (cu is not None):
+                hmail = hashlib.md5(cu.email()).hexdigest()
+                k = ndb.Key(User, hmail)
+                u = k.get()
+                if (u is None and createNew):
+                    u = User(id=hmail, email=cu.email(), apikey=ProgressApi.generateApiKey(hmail))
+                    u.put()
+        return u
 
     @endpoints.method(
         message_types.VoidMessage,
@@ -70,16 +69,9 @@ class ProgressApi(remote.Service):
         name='progress.user',
         http_method='GET')
     def getUserProfile(self, request):
-        cu = endpoints.get_current_user()
-        if (cu is None):
-            raise endpoints.UnauthorizedException('Invalid token.')
-
-        hmail = hashlib.md5(cu.email()).hexdigest()
-        u_key = ndb.Key(User, hmail)
-        u = u_key.get()
+        u = self.getUser()
         if (u is None):
-            u = User(id=hmail, email=cu.email(), apikey=ProgressApi.generateApiKey(hmail))
-            u.put()
+            raise endpoints.UnauthorizedException('Not authorized.')
 
         return UserResponseMessage(email=u.email, apikey=u.apikey)
 
@@ -90,7 +82,7 @@ class ProgressApi(remote.Service):
         name='progress.generateNewApiKey',
         http_method='GET')
     def generateNewApiKey(self, request):
-        u = self.getUserFromAuthOrApiKey(None)
+        u = self.getUser()
 
         if (u is None):
             raise endpoints.UnauthorizedException('Not authorized.')
@@ -107,7 +99,8 @@ class ProgressApi(remote.Service):
         name='progress.create',
         http_method='POST')
     def createProgress(self, request):
-        u = self.getUserFromAuthOrApiKey(request.apikey)
+        u = self.getUser(apikey=request.apikey)
+
         if (u is None):
             raise endpoints.UnauthorizedException('Not authorized.')
 
@@ -128,7 +121,8 @@ class ProgressApi(remote.Service):
         name='progress.update',
         http_method='POST')
     def updateProgress(self, request):
-        u = self.getUserFromAuthOrApiKey(request.apikey)
+        u = self.getUser(apikey=request.apikey)
+
         if (u is None):
             raise endpoints.UnauthorizedException('Not authorized.')
 
@@ -152,7 +146,8 @@ class ProgressApi(remote.Service):
         name='progress.list',
         http_method='GET')
     def queryProgresses(self, request):
-        u = self.getUserFromAuthOrApiKey(None)
+        u = self.getUser(apikey=request.apikey)
+
         if (u is None):
             raise endpoints.UnauthorizedException('Not authorized.')
 

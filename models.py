@@ -38,6 +38,7 @@ class QueryProgressRequestMessage(messages.Message):
     limit = messages.IntegerField(1, default=10)
     order = messages.StringField(2, default='-lastUpdated')
     pageToken = messages.StringField(3)
+    apikey = messages.StringField(4)
 
 class QueryProgressResponseMessage(messages.Message):
     items = messages.MessageField(ProgressResponseMesssage, 1, repeated=True)
