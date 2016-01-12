@@ -15,7 +15,6 @@
       <div class="col-md-3 col-xs-3"><h5>My Progresses</h5></div>
       <div class="col-md-5 col-xs-5">
         <div class="btn-toolbar pull-right" role="group" aria-label="...">
-          <button type="button" class="btn btn-default" ng-click="refreshProgresses()">Refresh</button>
           <button type="button" class="btn btn-primary" ng-click="showCreate()">Create New</button>
         </div>
       </div>
@@ -43,9 +42,13 @@
 
     <div class="row">
       <div class="col-md-8 col-xs-8">
-        <div class="btn-toolbar pull-right" role="group" aria-label="...">
-          <button type="button" class="btn btn-default" ng-disabled="!nextPageToken" ng-click="nextProgresses()">Next</button>
-        </div>
+        <nav>
+          <ul class="pager">
+            <li><a href="#" ng-show="thisPageToken" ng-click="firstProgresses()">First</a></li>
+            <li><a href="#" ng-click="refreshProgresses()">Refresh</a></li>
+            <li><a href="#" ng-show="nextPageToken" ng-click="nextProgresses()">Next</a></li>
+          </ul>
+        </nav>
       </div>
     </div>
   </div>

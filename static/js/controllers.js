@@ -55,6 +55,10 @@ progressApp.controller('HomeCtrl', function($scope, $location) {
       $scope.listProgresses({'pageToken': $scope.nextPageToken});
     }
 
+    $scope.firstProgresses = function(args) {
+      $scope.listProgresses({});
+    }
+
     $scope.showCreate = function() {
       $location.path('/create');
     }
