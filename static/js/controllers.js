@@ -63,6 +63,10 @@ progressApp.controller('HomeCtrl', function($scope, $location) {
       $location.path('/create');
     }
 
+    $scope.deleteProgress = function(id) {
+      console.log(id);
+    }
+
     $scope.$watch('isSignedIn', function(newValue, oldValue) {
       if (newValue) {
         $scope.listProgresses();

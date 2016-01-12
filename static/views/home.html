@@ -24,16 +24,28 @@
       <div class="col-md-8 col-xs-8">
         <div class="list-group">
           <div class="list-group-item" ng-repeat="progress in progresses" >
-            <h5 class="list-group-item-heading">{{progress.title}}</h5>
-            <p class="list-group-item-text">{{progress.description}}</p>
-            <div class="progress" style="margin: 8px 0px 0px 0px;">
-              <div class="progress-bar" role="progressbar" aria-valuenow="{{progress.progress}}"
-                  aria-valuemin="0" aria-valuemax="100" style="min-width: 1em; width:{{progress.progress}}%">{{progress.progress}}%
+            <div ng-mouseenter="progress.current=true" ng-mouseleave="progress.current=false">
+              <div class="row">
+                <div class="col-md-10 col-xs-10">
+                  <h5 class="list-group-item-heading">{{progress.title}}</h5>
+                </div>
+                <div class="col-md-2 col-xs-2">
+                  <div class="pull-right">
+                    <a href="#" title="Edit progress" class="glyphicon glyphicon-edit" ng-show="progress.current" ng-click="editProgress(progress.id)"></a>
+                    <a href="#" title="Delete progress" class="glyphicon glyphicon-remove" ng-show="progress.current" ng-click="deleteProgress(progress.id)"></a>
+                  </div>
+                </div>
               </div>
+              <p class="list-group-item-text">{{progress.description}}</p>
+              <div class="progress" style="margin: 8px 0px 0px 0px;">
+                <div class="progress-bar" role="progressbar" aria-valuenow="{{progress.progress}}"
+                    aria-valuemin="0" aria-valuemax="100" style="min-width: 1em; width:{{progress.progress}}%">{{progress.progress}}%
+                </div>
+              </div>
+              <p class="list-group-item-text">
+                <small>{{progress.progress}}% completed, updated {{progress.lastUpdated | timeago}} ago, ID {{progress.id}}</small>
+              </p>
             </div>
-            <p class="list-group-item-text">
-              <small>{{progress.progress}}% completed, updated {{progress.lastUpdated | timeago}} ago, ID {{progress.id}}</small>
-            </p>
           </div>
         </div>
       </div>
