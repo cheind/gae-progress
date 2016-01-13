@@ -8,21 +8,16 @@ from google.appengine.datastore import datastore_query
 
 import uuid
 import hashlib
-from models import *
-from utils import ndbAttributesFromString
-from pprint import pprint
 
-WEB_CLIENT_ID = '248701908744-ab1in98hrea09g6qe8nrofjsagurm362.apps.googleusercontent.com'
-# Python datetime.isoformat seems not to include timezone information, therefore we
-# explicitly specify a format string with a trailing Z for UTC time
-DATETIME_STRING_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
-QUERY_LIMIT_MAX = 100
+import models
+import constants
+import utils
 
 @endpoints.api(
     name='progressApi',
     version='v1',
     description='Monitor any progress.',
-    allowed_client_ids=[WEB_CLIENT_ID, endpoints.API_EXPLORER_CLIENT_ID],
+    allowed_client_ids=constants.CLIENT_IDS,
     scopes=[endpoints.EMAIL_SCOPE],)
 class ProgressApi(remote.Service):
 
@@ -39,7 +34,7 @@ class ProgressApi(remote.Service):
         if (apikey is not None):
             hmail = self.splitApiKey(apikey)
             if (hmail is not None):
-                return ndb.Key(User, hmail).get()
+                return ndb.Key(models.User, hmail).get()
 
     def getUser(self, apikey=None, createNew=True):
         u = None
@@ -51,10 +46,10 @@ class ProgressApi(remote.Service):
             cu = endpoints.get_current_user()
             if (cu is not None):
                 hmail = hashlib.md5(cu.email()).hexdigest()
-                k = ndb.Key(User, hmail)
+                k = ndb.Key(models.User, hmail)
                 u = k.get()
                 if (u is None and createNew):
-                    u = User(id=hmail, email=cu.email(), apikey=self.generateApiKey(hmail))
+                    u = models.User(id=hmail, email=cu.email(), apikey=self.generateApiKey(hmail))
                     u.put()
         return u
 
@@ -64,7 +59,7 @@ class ProgressApi(remote.Service):
 
     @endpoints.method(
         message_types.VoidMessage,
-        UserResponseMessage,
+        models.UserResponseMessage,
         path='userProfile',
         name='userProfile',
         http_method='GET')
@@ -73,11 +68,11 @@ class ProgressApi(remote.Service):
         if (u is None):
             raise endpoints.UnauthorizedException('Not authorized.')
 
-        return UserResponseMessage(email=u.email, apikey=u.apikey)
+        return models.UserResponseMessage(email=u.email, apikey=u.apikey)
 
     @endpoints.method(
         message_types.VoidMessage,
-        UserResponseMessage,
+        models.UserResponseMessage,
         path='generateNewApiKey',
         name='generateNewApiKey',
         http_method='GET')
@@ -90,11 +85,11 @@ class ProgressApi(remote.Service):
         u.apikey = self.generateApiKey(u.key.id())
         u.put()
 
-        return UserResponseMessage(email=u.email, apikey=u.apikey)
+        return models.UserResponseMessage(email=u.email, apikey=u.apikey)
 
     @endpoints.method(
-        CreateProgressRequestMessage,
-        CreateProgressResponseMessage,
+        models.CreateProgressRequestMessage,
+        models.CreateProgressResponseMessage,
         path='create',
         name='create',
         http_method='POST')
@@ -104,7 +99,7 @@ class ProgressApi(remote.Service):
         if (u is None):
             raise endpoints.UnauthorizedException('Not authorized.')
 
-        p = Progress(
+        p = models.Progress(
             title=request.title,
             description=request.description,
             progress=self.clampProgress(request.progress),
@@ -112,10 +107,10 @@ class ProgressApi(remote.Service):
 
         k = p.put()
 
-        return CreateProgressResponseMessage(id=k.id())
+        return models.CreateProgressResponseMessage(id=k.id())
 
     @endpoints.method(
-        UpdateProgressRequestMessage,
+        models.UpdateProgressRequestMessage,
         message_types.VoidMessage,
         path='update',
         name='update',
@@ -128,7 +123,7 @@ class ProgressApi(remote.Service):
 
         # Need to specify parent, as id is only unique in combination with
         # a parent key
-        p = Progress.get_by_id(request.id, parent=u.key)
+        p = models.Progress.get_by_id(request.id, parent=u.key)
         if (p is None):
             raise endpoints.NotFoundException('Progress with id %i not found' % request.id)
 
@@ -140,7 +135,7 @@ class ProgressApi(remote.Service):
         return message_types.VoidMessage()
 
     @endpoints.method(
-        DeleteProgressRequestMessage,
+        models.DeleteProgressRequestMessage,
         message_types.VoidMessage,
         path='delete',
         name='delete',
@@ -151,14 +146,14 @@ class ProgressApi(remote.Service):
         if (u is None):
             raise endpoints.UnauthorizedException('Not authorized.')
 
-        k = ndb.Key(Progress, request.id, parent=u.key)
+        k = ndb.Key(models.Progress, request.id, parent=u.key)
         k.delete()
 
         return message_types.VoidMessage()
 
     @endpoints.method(
-        QueryProgressRequestMessage,
-        QueryProgressResponseMessage,
+        models.QueryProgressRequestMessage,
+        models.QueryProgressResponseMessage,
         path='list',
         name='list',
         http_method='GET')
@@ -168,8 +163,8 @@ class ProgressApi(remote.Service):
         if (u is None):
             raise endpoints.UnauthorizedException('Not authorized.')
 
-        q = Progress.query(ancestor=u.key)
-        orderAttr = ndbAttributesFromString(request.order, Progress)
+        q = models.Progress.query(ancestor=u.key)
+        orderAttr = utils.ndbAttributesFromString(request.order, models.Progress)
         if (orderAttr is not None):
             q = q.order(*orderAttr)
 
@@ -180,21 +175,21 @@ class ProgressApi(remote.Service):
             qopts['start_cursor'] = cursor
 
         limit = request.limit or 10
-        limit = max(1, min(limit, QUERY_LIMIT_MAX))
+        limit = max(1, min(limit, constants.QUERY_LIMIT_MAX))
         items, cursor, moreResults = q.fetch_page(limit, **qopts)
         if not moreResults:
           cursor = None
 
         ps = []
         for pm in items:
-            prm = ProgressResponseMessage(
+            prm = models.ProgressResponseMessage(
                 id=pm.key.id(),
                 title=pm.title,
                 description=pm.description,
                 progress=pm.progress,
-                created=pm.created.strftime(DATETIME_STRING_FORMAT),
-                lastUpdated=pm.lastUpdated.strftime(DATETIME_STRING_FORMAT))
+                created=pm.created.strftime(constants.DATETIME_STRING_FORMAT),
+                lastUpdated=pm.lastUpdated.strftime(constants.DATETIME_STRING_FORMAT))
             ps.append(prm)
 
         nextToken = cursor.to_websafe_string() if cursor else None
-        return QueryProgressResponseMessage(items=ps, nextPageToken=nextToken, thisPageToken=request.pageToken)
+        return models.QueryProgressResponseMessage(items=ps, nextPageToken=nextToken, thisPageToken=request.pageToken)

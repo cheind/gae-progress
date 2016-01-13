@@ -23,7 +23,7 @@ handlers:
   static_files: www/views/\1
   upload: www/views/(.+)
 
-  # Endpoints handler: Must be /_ah/spi. Apps send requests to /_ah/api, but these are handled at /_ah/spi!!
+  # Endpoints handler
 - url: /_ah/spi/.*
   script: endpoint_services.APPLICATION
   secure: always
