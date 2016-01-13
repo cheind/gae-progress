@@ -198,5 +198,3 @@ class ProgressApi(remote.Service):
 
         nextToken = cursor.to_websafe_string() if cursor else None
         return QueryProgressResponseMessage(items=ps, nextPageToken=nextToken, thisPageToken=request.pageToken)
-
-APPLICATION = endpoints.api_server([ProgressApi], restricted=False)

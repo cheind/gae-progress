@@ -25,15 +25,13 @@ handlers:
 
   # Endpoints handler: Must be /_ah/spi. Apps send requests to /_ah/api, but these are handled at /_ah/spi!!
 - url: /_ah/spi/.*
-  script: progress_api.APPLICATION
+  script: endpoint_services.APPLICATION
   secure: always
 
 - url: /(.+)
   static_files: www/index.html
   upload: www/index.html
   secure: always
-
-
 
 libraries:
 - name: pycrypto
