@@ -168,7 +168,6 @@ class ProgressApi(remote.Service):
         if (orderAttr is not None):
             q = q.order(*orderAttr)
 
-
         qopts = {}
         if (request.pageToken is not None):
             cursor = datastore_query.Cursor.from_websafe_string(request.pageToken)
