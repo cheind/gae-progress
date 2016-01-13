@@ -13,16 +13,5 @@ indexes:
 - kind: Progress
   ancestor: yes
   properties:
-  - name: created
-
-- kind: Progress
-  ancestor: yes
-  properties:
-  - name: created
-    direction: desc
-
-- kind: Progress
-  ancestor: yes
-  properties:
   - name: lastUpdated
     direction: desc
