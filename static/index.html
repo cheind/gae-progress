@@ -7,7 +7,6 @@
   <base href="/">
   <title>Progress</title>
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/paper/bootstrap.min.css">
-  <link rel="stylesheet" href="//code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css">
 </head>
 
 <body ng-controller="RootCtrl" ng-init="trySignIn()">
@@ -15,7 +14,7 @@
   <div class="navbar navbar-default navbar-static-top">
     <div class="container">
       <ul class="nav navbar-nav">
-        <a href="/" class="navbar-brand"><i class="ion-stats-bars"></i> Progress</a>
+        <a href="/" class="navbar-brand"><span class="glyphicon glyphicon-align-left"></span> Progress</a>
         <li><a href="/">Home</a></li>
         <li><a href="/profile" ng-show="isSignedIn">Profile</a></li>
         <li><a href="/" ng-click="signOut()" ng-show="isSignedIn">Log out</a></li>
