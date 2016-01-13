@@ -142,6 +142,23 @@ class ProgressApi(remote.Service):
         return message_types.VoidMessage()
 
     @endpoints.method(
+        DeleteProgressRequestMessage,
+        message_types.VoidMessage,
+        path='delete',
+        name='progress.delete',
+        http_method='POST')
+    def deleteProgress(self, request):
+        u = self.getUser(apikey=request.apikey)
+
+        if (u is None):
+            raise endpoints.UnauthorizedException('Not authorized.')
+
+        k = ndb.Key(Progress, request.id, parent=u.key)
+        k.delete()
+
+        return message_types.VoidMessage()
+
+    @endpoints.method(
         QueryProgressRequestMessage,
         QueryProgressResponseMessage,
         path='list',
@@ -172,7 +189,7 @@ class ProgressApi(remote.Service):
 
         ps = []
         for pm in items:
-            prm = ProgressResponseMesssage(
+            prm = ProgressResponseMessage(
                 id=pm.key.id(),
                 title=pm.title,
                 description=pm.description,

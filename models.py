@@ -26,7 +26,18 @@ class CreateProgressRequestMessage(messages.Message):
 class CreateProgressResponseMessage(messages.Message):
     id = messages.IntegerField(1)
 
-class ProgressResponseMesssage(messages.Message):
+class UpdateProgressRequestMessage(messages.Message):
+    id = messages.IntegerField(1, required=True)
+    title = messages.StringField(2)
+    description = messages.StringField(3)
+    progress = messages.FloatField(4)
+    apikey = messages.StringField(5)
+
+class DeleteProgressRequestMessage(messages.Message):
+    id = messages.IntegerField(1, required=True)
+    apikey = messages.StringField(2)
+
+class ProgressResponseMessage(messages.Message):
     id = messages.IntegerField(1)
     title = messages.StringField(2)
     description = messages.StringField(3)
@@ -41,13 +52,6 @@ class QueryProgressRequestMessage(messages.Message):
     apikey = messages.StringField(4)
 
 class QueryProgressResponseMessage(messages.Message):
-    items = messages.MessageField(ProgressResponseMesssage, 1, repeated=True)
+    items = messages.MessageField(ProgressResponseMessage, 1, repeated=True)
     thisPageToken = messages.StringField(2)
     nextPageToken = messages.StringField(3)
-
-class UpdateProgressRequestMessage(messages.Message):
-    id = messages.IntegerField(1, required=True)
-    title = messages.StringField(2)
-    description = messages.StringField(3)
-    progress = messages.FloatField(4)
-    apikey = messages.StringField(5)

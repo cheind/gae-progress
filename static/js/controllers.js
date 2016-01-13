@@ -24,7 +24,7 @@ progressApp.controller('RootCtrl', function($scope, oauth2Provider) {
 
 });
 
-progressApp.controller('HomeCtrl', function($scope, $location) {
+progressApp.controller('HomeCtrl', function($scope, $location, $uibModal) {
     $scope.progresses = [];
     $scope.nextPageToken = null;
     $scope.thisPageToken = null;
@@ -47,24 +47,73 @@ progressApp.controller('HomeCtrl', function($scope, $location) {
         });
     }
 
-    $scope.refreshProgresses = function(args) {
+    $scope.refreshProgresses = function() {
       $scope.listProgresses({'pageToken': $scope.thisPageToken});
     }
 
-    $scope.nextProgresses = function(args) {
+    $scope.nextProgresses = function() {
       $scope.listProgresses({'pageToken': $scope.nextPageToken});
     }
 
-    $scope.firstProgresses = function(args) {
+    $scope.firstProgresses = function() {
       $scope.listProgresses({});
     }
 
-    $scope.showCreate = function() {
-      $location.path('/create');
+    $scope.createProgress = function() {
+      var modalInstance = $uibModal.open({
+        animation: false,
+        templateUrl: '/views/create_modal.html',
+        controller: 'CreateCtrl',
+        size: 'lg',
+      });
+
+      modalInstance.result.then(function (progress) {
+        gapi.client.progressApi.progress.create(progress).execute(
+          function(resp){
+            $scope.$apply(function() {
+              if (resp && !resp.error) {
+                $scope.refreshProgresses();
+              }
+            });
+          });
+      });
     }
 
-    $scope.deleteProgress = function(id) {
-      console.log(id);
+    $scope.editProgress = function(index) {
+      var modalInstance = $uibModal.open({
+        animation: false,
+        templateUrl: '/views/edit_modal.html',
+        controller: 'EditCtrl',
+        size: 'lg',
+        resolve: {
+          progress: function () {
+            return $scope.progresses[index];
+          }
+        }
+      });
+
+      modalInstance.result.then(function (progress) {
+        gapi.client.progressApi.progress.update(progress).execute(
+          function(resp){
+            $scope.$apply(function() {
+              if (resp && !resp.error) {
+                $scope.refreshProgresses();
+              }
+            });
+          });
+      });
+    }
+
+    $scope.deleteProgress = function(index) {
+      var params = {'id': $scope.progresses[index].id}
+      gapi.client.progressApi.progress.delete(params).execute(
+        function(resp){
+          $scope.$apply(function() {
+            if (resp && !resp.error) {
+              $scope.refreshProgresses();
+            }
+          });
+        });
     }
 
     $scope.$watch('isSignedIn', function(newValue, oldValue) {
@@ -106,18 +155,25 @@ progressApp.controller('ProfileCtrl', function($scope) {
 
 });
 
-progressApp.controller('CreateCtrl', function($scope, $location) {
-  $scope.master = {};
+progressApp.controller('CreateCtrl', function($scope, $uibModalInstance) {
 
-  $scope.create = function(progress) {
-     $scope.master = angular.copy(progress);
-     gapi.client.progressApi.progress.create(progress).execute(
-       function(resp){
-         $scope.$apply(function() {
-           $location.path("/");
-         });
-       });
+  $scope.ok = function () {
+    $uibModalInstance.close($scope.progress);
   };
 
+  $scope.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+});
 
+progressApp.controller('EditCtrl', function($scope, $uibModalInstance, progress) {
+  $scope.progress = angular.copy(progress);
+
+  $scope.ok = function () {
+    $uibModalInstance.close($scope.progress);
+  };
+
+  $scope.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
 });

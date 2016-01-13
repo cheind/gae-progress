@@ -1,17 +1,13 @@
 
 'use strict';
 
-var progressApp = angular.module('ProgressApp', ['ngRoute'])
+var progressApp = angular.module('ProgressApp', ['ngRoute', 'ui.bootstrap'])
 
 progressApp.config(function($routeProvider, $locationProvider) {
   $routeProvider.
     when('/profile', {
       templateUrl: '/views/profile.html',
       controller: 'ProfileCtrl'
-    }).
-    when('/create', {
-      templateUrl: '/views/create.html',
-      controller: 'CreateCtrl'
     }).
     when('/', {
       templateUrl: '/views/home.html',
