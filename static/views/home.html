@@ -20,47 +20,54 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-xs-8">
-        <div class="list-group">
-          <div class="list-group-item" ng-repeat="progress in progresses" >
-            <div class="row">
-              <div class="col-xs-10">
-                <h5 class="list-group-item-heading">{{progress.title}}</h5>
-              </div>
-              <div class="col-xs-2">
-                <div class="pull-right">
-                  <a href="#" title="Edit progress" class="glyphicon glyphicon-edit"  ng-click="editProgress($index)"></a>
-                  <a href="#" title="Delete progress" class="glyphicon glyphicon-remove" ng-click="deleteProgress($index)"></a>
-                </div>
-              </div>
-            </div>
-            <p class="list-group-item-text">{{progress.description}}</p>
-            <div class="progress" style="margin: 8px 0px 0px 0px;">
-              <div class="progress-bar-success" role="progressbar" aria-valuenow="{{progress.progress}}"
-                  aria-valuemin="0" aria-valuemax="100" style="min-width: 1em; width:{{progress.progress}}%">{{progress.progress}}%
-              </div>
-            </div>
-            <p class="list-group-item-text">
-              <small>{{progress.progress}}% completed, updated {{progress.lastUpdated | timeago}} ago, ID {{progress.id}}</small>
-            </p>
-          </div>
+    <div ng-if="!progresses || progresses.length == 0">
+      <div class="row">
+        <div class="col-xs-8">
+          <h6>You don't have any progresses yet, start by <a href="#" ng-click="createProgress()">creating</a> one.</h6>
         </div>
       </div>
     </div>
 
-
-    <div class="row">
-      <div class="col-xs-8">
-        <nav>
-          <ul class="pager">
-            <li><a href="#" ng-show="thisPageToken" ng-click="firstProgresses()">First</a></li>
-            <li><a href="#" ng-click="refreshProgresses()">Refresh</a></li>
-            <li><a href="#" ng-show="nextPageToken" ng-click="nextProgresses()">Next</a></li>
-          </ul>
-        </nav>
+    <div ng-if="progresses && progresses.length > 0">
+      <div class="row">
+        <div class="col-xs-8">
+          <div class="list-group">
+            <div class="list-group-item" ng-repeat="progress in progresses" >
+              <div class="row">
+                <div class="col-xs-10">
+                  <h5 class="list-group-item-heading">{{progress.title}}</h5>
+                </div>
+                <div class="col-xs-2">
+                  <div class="pull-right">
+                    <a href="#" title="Edit progress" class="glyphicon glyphicon-edit"  ng-click="editProgress($index)"></a>
+                    <a href="#" title="Delete progress" class="glyphicon glyphicon-remove" ng-click="deleteProgress($index)"></a>
+                  </div>
+                </div>
+              </div>
+              <p class="list-group-item-text">{{progress.description}}</p>
+              <div class="progress" style="margin: 8px 0px 0px 0px;">
+                <div class="progress-bar-success" role="progressbar" aria-valuenow="{{progress.progress}}"
+                    aria-valuemin="0" aria-valuemax="100" style="min-width: 1em; width:{{progress.progress}}%">{{progress.progress}}%
+                </div>
+              </div>
+              <p class="list-group-item-text">
+                <small>{{progress.progress}}% completed, updated {{progress.lastUpdated | timeago}} ago, ID {{progress.id}}</small>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-8">
+          <nav>
+            <ul class="pager">
+              <li><a href="#" ng-show="thisPageToken" ng-click="firstProgresses()">First</a></li>
+              <li><a href="#" ng-click="refreshProgresses()">Refresh</a></li>
+              <li><a href="#" ng-show="nextPageToken" ng-click="nextProgresses()">Next</a></li>
+            </ul>
+          </nav>
+        </div>
       </div>
     </div>
   </div>
-
 </div>

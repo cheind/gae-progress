@@ -65,8 +65,8 @@ class ProgressApi(remote.Service):
     @endpoints.method(
         message_types.VoidMessage,
         UserResponseMessage,
-        path='user',
-        name='progress.user',
+        path='userProfile',
+        name='userProfile',
         http_method='GET')
     def getUserProfile(self, request):
         u = self.getUser()
@@ -79,7 +79,7 @@ class ProgressApi(remote.Service):
         message_types.VoidMessage,
         UserResponseMessage,
         path='generateNewApiKey',
-        name='progress.generateNewApiKey',
+        name='generateNewApiKey',
         http_method='GET')
     def generateNewApiKey(self, request):
         u = self.getUser()
@@ -96,7 +96,7 @@ class ProgressApi(remote.Service):
         CreateProgressRequestMessage,
         CreateProgressResponseMessage,
         path='create',
-        name='progress.create',
+        name='create',
         http_method='POST')
     def createProgress(self, request):
         u = self.getUser(apikey=request.apikey)
@@ -118,7 +118,7 @@ class ProgressApi(remote.Service):
         UpdateProgressRequestMessage,
         message_types.VoidMessage,
         path='update',
-        name='progress.update',
+        name='update',
         http_method='POST')
     def updateProgress(self, request):
         u = self.getUser(apikey=request.apikey)
@@ -143,7 +143,7 @@ class ProgressApi(remote.Service):
         DeleteProgressRequestMessage,
         message_types.VoidMessage,
         path='delete',
-        name='progress.delete',
+        name='delete',
         http_method='POST')
     def deleteProgress(self, request):
         u = self.getUser(apikey=request.apikey)
@@ -160,7 +160,7 @@ class ProgressApi(remote.Service):
         QueryProgressRequestMessage,
         QueryProgressResponseMessage,
         path='list',
-        name='progress.list',
+        name='list',
         http_method='GET')
     def queryProgresses(self, request):
         u = self.getUser(apikey=request.apikey)

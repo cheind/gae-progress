@@ -37,7 +37,7 @@ progressApp.controller('HomeCtrl', function($scope, $location, $uibModal) {
         'pageToken': args['pageToken'],
         'order' : args['order'] || '-lastUpdated'
       }
-      gapi.client.progressApi.progress.list(params).execute(
+      gapi.client.progressApi.list(params).execute(
         function(resp){
           $scope.$apply(function() {
             $scope.progresses = resp.items;
@@ -68,7 +68,7 @@ progressApp.controller('HomeCtrl', function($scope, $location, $uibModal) {
       });
 
       modalInstance.result.then(function (progress) {
-        gapi.client.progressApi.progress.create(progress).execute(
+        gapi.client.progressApi.create(progress).execute(
           function(resp){
             $scope.$apply(function() {
               if (resp && !resp.error) {
@@ -93,7 +93,7 @@ progressApp.controller('HomeCtrl', function($scope, $location, $uibModal) {
       });
 
       modalInstance.result.then(function (progress) {
-        gapi.client.progressApi.progress.update(progress).execute(
+        gapi.client.progressApi.update(progress).execute(
           function(resp){
             $scope.$apply(function() {
               if (resp && !resp.error) {
@@ -106,7 +106,7 @@ progressApp.controller('HomeCtrl', function($scope, $location, $uibModal) {
 
     $scope.deleteProgress = function(index) {
       var params = {'id': $scope.progresses[index].id}
-      gapi.client.progressApi.progress.delete(params).execute(
+      gapi.client.progressApi.delete(params).execute(
         function(resp){
           $scope.$apply(function() {
             if (resp && !resp.error) {
@@ -128,7 +128,7 @@ progressApp.controller('ProfileCtrl', function($scope) {
   $scope.user = {};
 
   $scope.getProfile = function() {
-    gapi.client.progressApi.progress.user().execute(
+    gapi.client.progressApi.userProfile().execute(
       function(resp){
         $scope.$apply(function() {
           $scope.user['email'] = resp.email;
@@ -144,7 +144,7 @@ progressApp.controller('ProfileCtrl', function($scope) {
   });
 
   $scope.newApiKey = function() {
-    gapi.client.progressApi.progress.generateNewApiKey().execute(
+    gapi.client.progressApi.generateNewApiKey().execute(
       function(resp){
         $scope.$apply(function() {
           $scope.user['email'] = resp.email;
