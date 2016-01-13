@@ -6,10 +6,6 @@ from protorpc import remote
 from google.appengine.ext import ndb
 from google.appengine.datastore import datastore_query
 
-from endpoints_proto_datastore.ndb import EndpointsModel
-from endpoints_proto_datastore.ndb import EndpointsAliasProperty
-
-import logging
 import uuid
 import hashlib
 from models import *
@@ -30,12 +26,10 @@ QUERY_LIMIT_MAX = 100
     scopes=[endpoints.EMAIL_SCOPE],)
 class ProgressApi(remote.Service):
 
-    @classmethod
-    def generateApiKey(cls, hmail):
+    def generateApiKey(self, hmail):
         return '%s-%s' % (hmail, str(uuid.uuid4()))
 
-    @classmethod
-    def splitApiKey(cls, apikey):
+    def splitApiKey(self, apikey):
         if (apikey is not None):
             parts = apikey.split('-')
             if (len(parts) == 6):
@@ -43,7 +37,7 @@ class ProgressApi(remote.Service):
 
     def getUserFromApiKey(self, apikey):
         if (apikey is not None):
-            hmail = ProgressApi.splitApiKey(apikey)
+            hmail = self.splitApiKey(apikey)
             if (hmail is not None):
                 return ndb.Key(User, hmail).get()
 
@@ -60,9 +54,13 @@ class ProgressApi(remote.Service):
                 k = ndb.Key(User, hmail)
                 u = k.get()
                 if (u is None and createNew):
-                    u = User(id=hmail, email=cu.email(), apikey=ProgressApi.generateApiKey(hmail))
+                    u = User(id=hmail, email=cu.email(), apikey=self.generateApiKey(hmail))
                     u.put()
         return u
+
+    def clampProgress(self, value):
+        if (value is not None):
+            return max(0.0, min(value, 100.0))
 
     @endpoints.method(
         message_types.VoidMessage,
@@ -89,7 +87,7 @@ class ProgressApi(remote.Service):
         if (u is None):
             raise endpoints.UnauthorizedException('Not authorized.')
 
-        u.apikey = ProgressApi.generateApiKey(u.key.id())
+        u.apikey = self.generateApiKey(u.key.id())
         u.put()
 
         return UserResponseMessage(email=u.email, apikey=u.apikey)
@@ -109,7 +107,7 @@ class ProgressApi(remote.Service):
         p = Progress(
             title=request.title,
             description=request.description,
-            progress=request.progress,
+            progress=self.clampProgress(request.progress),
             parent=u.key)
 
         k = p.put()
@@ -136,7 +134,7 @@ class ProgressApi(remote.Service):
 
         p.description = request.description or p.description
         p.title = request.title or p.title
-        p.progress = request.progress or p.progress
+        p.progress = self.clampProgress(request.progress) or p.progress
         p.put()
 
         return message_types.VoidMessage()
