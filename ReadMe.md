@@ -123,6 +123,8 @@ The responsible function for looking up users from OpenID Connect or API keys is
 
 Authenticated users (either via OpenID Connect or API key) are authorized to create new progresses and manipulate their own progresses.
 
+`progressApi` will respond with an error code `401 - Unauthorized` when authorization fails.
+
 ## Clients
 Besides the web app that runs in the clients browser, this project comes with a set of additional clients that talk to our `progressApi`.
 
