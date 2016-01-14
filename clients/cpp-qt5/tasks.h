@@ -14,6 +14,9 @@
 
 #define PROGRESS_URL_SUFFIX "/_ah/api/progressApi/v1/"
 
+/**
+    Base task for communicating with gae-process RESTful API
+*/
 class ProgressTask : public QObject
 {
     Q_OBJECT
@@ -46,6 +49,9 @@ protected:
 };
 
 
+/**
+    List progresses.
+*/
 class ProgressListTask : public ProgressTask
 {
     Q_OBJECT
