@@ -126,70 +126,11 @@ Authenticated users (either via OpenID Connect or API key) are authorized to cre
 `progressApi` will respond with an error code `401 - Unauthorized` when authorization fails.
 
 ## Clients
-Besides the web app that runs in the clients browser, this project comes with a set of additional clients compatible with the `progressApi`.
 
-#### Web app <a name="WebApp">
-The web app runs in the clients browser. Web pages are served from the development / live server. These pages are static but contain [AngularJS](https://angularjs.org/) logic that is being evaluated on the client side. This logic accesses the `progressApi` through  [Google APIs client library](https://developers.google.com/discovery/libraries) in JavaScript.
-
-The web app supports full user management and progress management. Note that `progressApi` creates new users only from OpenID Connect authentication. Before using any other client you need sign in once using the web app.
-
-Browse [`backend/www`](backend/www) for more information or try the [live demo](https://progress-1181.appspot.com).
-
-#### Python-gapi client
-
-This client uses [Google APIs client library](https://developers.google.com/discovery/libraries) to access `progressApi` from a python script.
-
-To use the client you need to supply your API key. An API key is generated automatically for your when you first sign in to the web app. See the [web app](#WebApp) section for details. You can find and update your API key in the `Profile`.
-
-To create a new progress navigate to `clients/python-gapi`
-```
-> python progress.py create --key YOURAPIKEY --name 'Progress title'
-```
-
-When successful you should receive the ID of the newly generated `Progress`.
-```
-{u'id': u'5953992903360512'}
-```
-
-By default the client assumes the development server runs at `http://localhost:8080`. For more help on parameters and commands type
-
-```
-> python progress.py -h
-```
-
-#### C++/Qt5 client
-
-This client uses [Qt](http://www.qt.io/) to communicate with `progressApi`.
- - To build it you need to install Qt5 and [CMake](https://cmake.org).
- - Point CMake to `clients/cpp-qt5` and select a build directory.
- - Click configure
- - When asked point `PROGRESS_QT_INSTALL_PATH` to the install directory of Qt5.
- - Click generate
-
-Open the resulting solution in your C++ IDE and update `apikey` field to match your API key.
-Verify that the URL is pointing to the correct server address. Build the solution.
-This should build an application named `progress`. To run it, simply invoke
-
-```
-> progress
-```
-
-You should receive the first batch of your progresses. Output should look similar to
-
-```
-Received 2 items
-----------
-id: "4639526752354304"
-created: "2016-01-13T09:16:06.775000Z"
-title: "Cleaning Up"
-progress: 10
-----------
-id: "6117270380085248"
-created: "2016-01-13T09:11:30.773000Z"
-title: "Training classifier"
-progress: 0
-----------
-```
+**gae-progress** provides a collection of clients that are able to communicate with `progressApi`. These are
+ - [Web App](clients/www) - a AngularJS web application written in JavaScript.
+ - [Python-gapi](clients/python-gapi) - A Python command line client using the Google APIs client library.
+ - [Cpp/Qt](clients/cpp-qt5) - A C++ command line client using the Qt library.
 
 ## License
 ```

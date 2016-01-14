@@ -1,6 +1,6 @@
 ## Python-gapi client
 
-This console client uses Python and [Google APIs client library](https://developers.google.com/discovery/libraries) to interact with the RESTful `progressApi` service of [gae-progress](../../Readme.md).
+This console client uses Python and [Google APIs client library](https://developers.google.com/discovery/libraries) to interact with the RESTful `progressApi` service of **gae-progress**.
 
 To run the client you need Python 2.7 and the Google APIs client library for Python. This library can be installed via pip
 
@@ -8,7 +8,7 @@ To run the client you need Python 2.7 and the Google APIs client library for Pyt
 > pip install --upgrade google-api-python-client
 ```
 
-To use the client you need to supply your API key as command line parameter. An API key is generated automatically for your when you first sign in to the web app of [gae-progress](../../Readme.md). You can find and update your API key in the `Profile`.
+To use the client you need to supply your API key as command line parameter. An API key is generated automatically for your when you first sign in to the web app of **gae-progress**. You can find and update your API key in the `Profile`.
 
 To create a new progress navigate to `clients/python-gapi` and run
 ```
