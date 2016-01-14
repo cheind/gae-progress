@@ -2,7 +2,7 @@
 
 This is folder contains the backend services provided by [gae-progress](../../Readme.md). The backend services consist of a RESTful web service named `progressApi` to manage progresses and a web server to serve a set of static web pages.
 
-A couple of steps are required in order to run this backend service under your Google account.
+A couple of steps are required in order to run these services under your Google account.
 
 #### Create a new GAE project
 
