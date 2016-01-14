@@ -7,12 +7,12 @@ Test the [live demo](https://progress-1181.appspot.com).
 ## What's in it
 
 The features at a glance:
-  - RESTful web service
+  - a RESTful web service
     - to create, update, delete and query progresses,
     - implemented using [Google Endpoints API](https://cloud.google.com/appengine/docs/python/endpoints/),
     - supporting user authentication / authorization using [OpenID Connect](https://developers.google.com/identity/protocols/OpenIDConnect) or by API keys.
   - Web app build with [AngularJS](https://angularjs.org/).
-  - Additional clients using [Google APIs client library](https://developers.google.com/discovery/libraries) (Python, Javascript and Java).
+  - A collection of clients written in (Python, Javascript, Java and C++).
 
 ## Structure
 
