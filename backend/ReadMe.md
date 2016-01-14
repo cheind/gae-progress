@@ -51,4 +51,4 @@ Head over to [progress](./progress/) to browse the documentation for the `progre
 
 ## Web app
 
-Head over to [progress](./www) to browse the documentation for the web app.
+Head over to [www](./www) to browse the documentation for the web app.
