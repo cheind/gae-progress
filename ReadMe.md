@@ -147,7 +147,6 @@ To create a new progress navigate to `clients/python-gapi`
 ```
 
 When successful you should receive the ID of the newly generated `Progress`.
-
 ```
 {u'id': u'5953992903360512'}
 ```
