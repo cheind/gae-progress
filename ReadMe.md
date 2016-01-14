@@ -109,7 +109,7 @@ Each method provided by `progressApi` requires request and response messages. In
 
 #### Authentication <a name="Authentication"></a>
 
-`progressApi` supports OpenID Connect for user authentication. Once a user authenticates, the user fetched from the known `User` entities. If the user is not found in the datastore, a new `User` will be created on the fly. This way, sign up and sign in are actually one step.
+`progressApi` supports OpenID Connect for user authentication. Once a user authenticates, the user is fetched from the known `User` entities. If the user is not found in the datastore, a new `User` will be created on the fly. This way, sign up and sign in are actually one step.
 
 There are a number of steps involved in authentication via OpenID Connect, a fact that could throw of users from using your API as developing clients becomes too complex. As a consequence each `User` is also assigned an API key that can be used as an alternative way of authentication.
 
