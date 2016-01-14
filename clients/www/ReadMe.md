@@ -6,6 +6,6 @@ The web app runs in the client browser. Web pages are served from the developmen
 
 The web app supports full user management and progress management. Note that `progressApi` creates new users only from OpenID Connect authentication.
 
-**Note** Before using any API key based client you need sign in once using the web app to have your key generated.
+**Note** Before using any API key based client you need sign into the web app once to have your key generated.
 
 Try the [live demo](https://progress-1181.appspot.com).
