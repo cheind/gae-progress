@@ -28,7 +28,7 @@ A couple of steps are required in order to run this backend service under your G
 
 #### Create a new GAE project
 
-To create a new project, open the [Google Developer Console](https://console.developers.google.com) and click on *Create a project* and write down its `Project-ID`.
+Open the [Google Developer Console](https://console.developers.google.com), click on *Create a project* and write down its `Project-ID`.
 
 #### Set up credentials
 
