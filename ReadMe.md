@@ -113,7 +113,7 @@ Each method provided by `progressApi` requires request and response messages. In
 
 There are a number of steps involved in authentication via OpenID Connect, a fact that could throw of users from using your API as developing clients becomes too complex. As a consequence each `User` is also assigned an API key that can be used as an alternative way of authentication.
 
-The API key is randomly generated id that can be passed along with each `progressApi` request. If the backend API detects that an API key has been passed along with a request, it looks up the corresponding `User` and verifies that the two Api keys match.
+The API key is randomly generated id that can be passed along with each `progressApi` request. When the backend API detects that an API key is present on a request, it looks up the corresponding `User` and verifies that the two API keys match.
 
 The API key is a string assembled from two parts `User-UUID`. The former part is the MD5 hashed E-Mail address of the user and the latter part is a [Universally unique identifier](https://en.wikipedia.org/wiki/Universally_unique_identifier). Encoding the user information in the API key has the advantage to be able to directly lookup the `User` entity via it's key, compared to a costly query.
 
