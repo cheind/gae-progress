@@ -41,7 +41,7 @@ Next, you need to create new credentials for OAuth (OpenID connect) support. Thi
   1. Write down the generated `Client-ID`.
   1. In *API Manager/Credentials* create a *OAuth Consent Screen*. Default values are ok.
 
- More info on this process can be found [here](https://cloud.google.com/appengine/docs/python/endpoints/auth#Python_Creating_OAuth_20_client_IDs).
+If you are feeling lost, more info on this process can be found [here](https://cloud.google.com/appengine/docs/python/endpoints/auth#Python_Creating_OAuth_20_client_IDs).
 
 #### Get the source code
 Fork or download a [release](/releases) of this repository. Update the source using your `Client-ID` and `Project-ID` values.
