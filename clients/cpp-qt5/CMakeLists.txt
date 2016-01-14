@@ -15,5 +15,5 @@ set(CMAKE_AUTOMOC ON)
 find_package(Qt5Core)
 find_package(Qt5Network)
 
-add_executable(progress constants.h tasks.h main.cpp)
+add_executable(progress tasks.h main.cpp)
 target_link_libraries(progress Qt5::Network Qt5::Core)

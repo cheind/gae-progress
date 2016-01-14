@@ -12,13 +12,13 @@
 #include <QJsonObject>
 #include <QDebug>
 
-#include "constants.h"
+#define PROGRESS_URL_SUFFIX "/_ah/api/progressApi/v1/"
 
-class ProgressListTask : public QObject
+class ProgressTask : public QObject
 {
     Q_OBJECT
 public:
-    ProgressListTask(QObject *parent = 0) : QObject(parent) {}
+    ProgressTask(QObject *parent = 0) : QObject(parent) {}
     
     void setApiKey(const QString &key) {
         _apikey = key;
@@ -32,11 +32,31 @@ public:
         _addr = addr;
     }
     
+signals:
+    void taskCompleted();
+protected:
+    
+    QUrl urlFromAddressAndMethod(const QString &address, const QString &method) {
+        return QUrl(address + PROGRESS_URL_SUFFIX + method);
+    }
+    
+    QString _apikey;
+    QString _addr;
+    QNetworkAccessManager *_mgr;
+};
+
+
+class ProgressListTask : public ProgressTask
+{
+    Q_OBJECT
+public:
+    ProgressListTask(QObject *parent = 0) : ProgressTask(parent) {}
+    
+    
     public slots:
     void run()
     {
-        
-        QUrl url(_addr + PROGRESS_URL_SUFFIX + "list");
+        QUrl url = urlFromAddressAndMethod(_addr, "list");
         
         QUrlQuery query;
         query.addQueryItem("apikey", _apikey);
@@ -73,13 +93,8 @@ public:
         emit taskCompleted();
     }
     
-signals:
-    void taskCompleted();
-    
 private:
-    QString _apikey;
-    QString _addr;
-    QNetworkAccessManager *_mgr;
+
     QNetworkReply *_reply;
     
 };
