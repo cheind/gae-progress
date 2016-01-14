@@ -100,9 +100,74 @@ public:
     }
     
 private:
-
     QNetworkReply *_reply;
-    
 };
+
+/**
+    Create progresses.
+ */
+class ProgressCreateTask : public ProgressTask
+{
+    Q_OBJECT
+public:
+    ProgressCreateTask(QObject *parent = 0) : ProgressTask(parent) {}
+    
+    void setTitle(const QString &title) {
+        _title = title;
+    }
+    
+    void setDescription(const QString &desc) {
+        _desc = desc;
+    }
+    
+    void setProgress(float p) {
+        _progress = p;
+    }
+    
+    public slots:
+    void run()
+    {
+        QUrl url = urlFromAddressAndMethod(_addr, "create");
+        
+        QJsonObject j;
+        j["apikey"] = _apikey;
+        if (_title.size() > 0) j["title"] = _title;
+        if (_desc.size() > 0) j["description"] = _desc;
+        if (_title.size() > 0) j["progress"] = QString::number(_progress);
+        
+        QJsonDocument doc(j);
+        QByteArray bytes = doc.toJson();
+        QByteArray len = QByteArray::number(bytes.size());
+
+        QNetworkRequest req(url);
+        req.setRawHeader("Content-Type", "application/json");
+        req.setRawHeader("Content-Length", len);
+        
+        _reply = _mgr->post(req, bytes);
+        
+        QObject::connect(_reply, SIGNAL(finished()), this, SLOT(onReplyFinished()));
+    }
+    
+    void onReplyFinished() {
+        if ((_reply->error() == QNetworkReply::NoError)) {
+            QJsonDocument doc = QJsonDocument::fromJson(_reply->readAll());
+            if (!doc.isNull() && doc.isObject()) {
+                QJsonObject root = doc.object();
+                qDebug() << "Created progress ID:" << root["id"].toString();
+            }
+        } else {
+            qDebug() << "Error:" << _reply->errorString();
+        }
+        
+        _reply->deleteLater();
+        emit taskCompleted();
+    }
+    
+private:
+    QNetworkReply *_reply;
+    QString _title, _desc;
+    float _progress;
+};
+
 
 #endif

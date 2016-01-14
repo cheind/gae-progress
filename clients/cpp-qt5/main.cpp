@@ -15,13 +15,24 @@ int main(int argc, char* argv[])
     parser.setApplicationDescription("Interact with RESTful gae-progress API https://github.com/cheind/gae-progress");
     parser.addHelpOption();
     parser.addVersionOption();
-    parser.addPositionalArgument("command", "Which command to execute. Choose from list,.");
+    parser.addPositionalArgument("command", "Which command to execute. Choose from create,list.");
     
+    // Common arguments accross all tasks
     QCommandLineOption url("url", "URL of app server", "URL", "http://localhost:8080");
     QCommandLineOption apikey("key", "API-key to access resource", "String");
     
+    // Create specific arguments
+    QCommandLineOption title("title", "Title of progress to create", "String");
+    QCommandLineOption desc("desc", "Description of progress to create", "String");
+    QCommandLineOption prog("progress", "Progress value", "Float", "0.0");
+    
+    
     parser.addOption(url);
     parser.addOption(apikey);
+    parser.addOption(title);
+    parser.addOption(desc);
+    parser.addOption(prog);
+    
     
     parser.process(app);
     
@@ -39,6 +50,12 @@ int main(int argc, char* argv[])
     
     if (command == "list") {
         ProgressListTask *t = new ProgressListTask(&app);
+        task = t;
+    } else if (command == "create") {
+        ProgressCreateTask *t = new ProgressCreateTask(&app);
+        t->setTitle(parser.value(title));
+        t->setDescription(parser.value(desc));
+        t->setProgress(parser.value(prog).toFloat());
         task = t;
     } else {
         qDebug() << "Unknown command";
