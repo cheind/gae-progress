@@ -2,7 +2,7 @@
 
 This console client uses C++/Qt to interact with the RESTful `progressApi` service of **gae-progress**.
 
- - To build you need to install Qt5 and [CMake](https://cmake.org).
+ - To build you need to install [Qt5](http://www.qt.io) and [CMake](https://cmake.org).
  - Point CMake to `clients/cpp-qt5` and select a build directory.
  - Click configure.
  - When asked point `PROGRESS_QT_INSTALL_PATH` to the install directory of Qt5.
