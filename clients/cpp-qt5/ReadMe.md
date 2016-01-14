@@ -8,13 +8,15 @@ This console client uses C++/Qt to interact with the RESTful `progressApi` servi
  - When asked point `PROGRESS_QT_INSTALL_PATH` to the install directory of Qt5.
  - Click generate.
 
-Open the resulting solution in your C++ IDE and update `apikey` field to match your API key. Verify that the URL is pointing to the correct server address. Build the solution. This should build an application named `progress`. To run it, simply invoke
+Open the resulting solution in your C++ IDE and update `apikey` field to match your API key. Verify that the URL is pointing to the correct server address. Build the solution. This should build an application named `progress`.
+
+To query your progresses you simply run
 
 ```
-> progress
+> progress list --key YOUR-API-KEY
 ```
 
-from your command line. When all goes well you should see the first batch of your progresses printed to console. Output should look similar to
+from command line. When all goes well you should see the first batch of your progresses printed to console. Output should look similar to
 
 ```
 Received 2 items
@@ -30,3 +32,11 @@ title: "Training classifier"
 progress: 0
 ----------
 ```
+
+Type
+
+```
+> progress --help
+```
+
+to see available options.
