@@ -115,7 +115,7 @@ There are a number of steps involved in authentication via OpenID Connect, a fac
 
 The API key is randomly generated id that can be passed along with each `progressApi` request. When the backend API detects that an API key is present on a request, it looks up the corresponding `User` and verifies that the two API keys match.
 
-The API key is a string assembled from two parts: `User-UUID`. The former part is the MD5 hashed E-Mail address of the user and the latter part is a [Universally unique identifier](https://en.wikipedia.org/wiki/Universally_unique_identifier). Encoding the user information in the API key has the advantage to be able to directly lookup the `User` entity via it's key, compared to a costly query.
+The API key is a string assembled from two parts: `User-UUID`. The former part is the MD5 hashed E-Mail address of the user and the latter part is a [Universally unique identifier](https://en.wikipedia.org/wiki/Universally_unique_identifier). Encoding the user information in the API key has the advantage to be able to directly lookup the `User` entity via it's key, compared to a costly query. Since the E-Mail is not encoded directly, we don't expose sensitive information.
 
 The responsible function for looking up users from OpenID Connect or API keys is `getUser` in [api.py](backend/progress/api.py).
 
