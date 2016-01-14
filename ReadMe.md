@@ -146,7 +146,7 @@ To create a new progress navigate to `clients/python-gapi`
 > python progress.py create --key YOURAPIKEY --name 'Progress title'
 ```
 
-When successfuly you should receive the ID of the newly generated `Progress`.
+When successful you should receive the ID of the newly generated `Progress`.
 
 ```
 {u'id': u'5953992903360512'}
