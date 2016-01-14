@@ -126,7 +126,7 @@ Authenticated users (either via OpenID Connect or API key) are authorized to cre
 `progressApi` will respond with an error code `401 - Unauthorized` when authorization fails.
 
 ## Clients
-Besides the web app that runs in the clients browser, this project comes with a set of additional clients that talk to our `progressApi`.
+Besides the web app that runs in the clients browser, this project comes with a set of additional clients compatible with the `progressApi`.
 
 #### Web app <a name="WebApp">
 The web app runs in the clients browser. Web pages are served from the development / live server. These pages are static but contain [AngularJS](https://angularjs.org/) logic that is being evaluated on the client side. This logic accesses the `progressApi` through  [Google APIs client library](https://developers.google.com/discovery/libraries) in JavaScript.
