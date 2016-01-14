@@ -14,7 +14,6 @@ set(CMAKE_AUTOMOC ON)
 # Find the QtWidgets library
 find_package(Qt5Core)
 find_package(Qt5Network)
-find_package(Qt5Widgets)
 
-add_executable(progress main.cpp)
-target_link_libraries(progress Qt5::Network Qt5::Core Qt5::Widgets)
+add_executable(progress constants.h tasks.h main.cpp)
+target_link_libraries(progress Qt5::Network Qt5::Core)

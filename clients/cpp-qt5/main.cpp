@@ -1,52 +1,22 @@
 
 #include <QtCore>
-#include <QUrl>
 #include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QNetworkRequest>
-#include <QApplication>
-#include <QDebug>
 
-#include <QJsonDocument>
-#include <QJsonObject>
+#include "tasks.h"
 
 int main(int argc, char* argv[])
 {
-    QApplication app(argc, argv);
-
-    QUrl url("http://localhost:8080/_ah/api/progressApi/v1/list");    
-    QUrlQuery query;
-    query.addQueryItem("apikey", "YOUR-API-KEY");    
-    url.setQuery(query);
-
+    QCoreApplication app(argc, argv);
     QNetworkAccessManager mgr;
-    QNetworkRequest req(url);
-    QNetworkReply *reply = mgr.get(req);
-
-    QObject::connect(reply, SIGNAL(finished()), &app, SLOT(quit()));
-
-    app.exec();    
     
-    if ((reply->error() == QNetworkReply::NoError)) {
-       
-        QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
-        if (!doc.isNull() && doc.isObject()) {
-            QJsonObject root = doc.object();
-            QJsonArray items = root["items"].toArray();
-            qDebug() << "Received" << items.size() << "items";
-            qDebug() << "----------";
-            for (int i = 0; i < items.size(); ++i) {
-                QJsonObject item = items[i].toObject();
-                qDebug() << "id:" << item["id"].toString();
-                qDebug() << "created:" << item["created"].toString();
-                qDebug() << "title:" << item["title"].toString();
-                qDebug() << "progress:" << item["progress"].toInt();
-                qDebug() << "----------";
-            }
-        }
-    } else {
-        qDebug() << "Error:" << reply->errorString();
-    }
-
+    ProgressListTask *task = new ProgressListTask(&app);
+    task->setNetworkAccessManager(&mgr);
+    task->setApiKey("d1535c766311cdf0dddf2269b6cd1120-91caff93-23fa-4692-a072-b8fbda064101");
+    
+    QObject::connect(task, SIGNAL(taskCompleted()), &app, SLOT(quit()));
+    QTimer::singleShot(0, task, SLOT(run()));
+    
+    app.exec();
+    
     return 0;
 }
