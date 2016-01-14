@@ -1,6 +1,6 @@
 ## progressApi - a RESTful web service
 
-This folder contains the implementation of `progressApi`, a RESTful service of [gae-progress](../../).
+This folder contains the implementation of `progressApi`, a RESTful service of [gae-progress](/).
 
 Once the backend server is up and running you can explore the API using Google API Explorer. It's accessible from `http://localhost:8080/_ah/api/explorer`. Alternatively you can browse the [live API](https://progress-1181.appspot.com/_ah/api/explorer).
 
