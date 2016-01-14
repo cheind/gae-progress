@@ -24,7 +24,7 @@ The project is structured as follows:
 
 ## Getting started
 
-A couple of steps are required in order to run this service under your Google account.
+A couple of steps are required in order to run this backend service under your Google account.
 
 #### Create a new GAE project
 
