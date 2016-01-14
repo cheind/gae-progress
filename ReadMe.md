@@ -22,11 +22,17 @@ The project is structured as follows:
     - `backend/www` a web app to access and manage progresses
   - the `clients` directory contains additional clients utilizing the progress API.
 
-## Running the backend service
+## Getting started
 
-A couple of steps are required in order to run this service under your Google account. First, create a new project using [Google Developer Console](https://console.developers.google.com) and write down its `Project-ID`.
+A couple of steps are required in order to run this service under your Google account.
 
-Next, create new credentials for OAuth (OpenID connect) support. This will be needed so users can authenticate with our progress API via the web app. Here is a short step by step guide how to do this, more info on this process can be found [here](https://cloud.google.com/appengine/docs/python/endpoints/auth#Python_Creating_OAuth_20_client_IDs).
+#### Create a new GAE project
+
+To create a new project, open the [Google Developer Console](https://console.developers.google.com) and click on *Create a project* and write down its `Project-ID`.
+
+#### Set up credentials
+
+Next, you need to create new credentials for OAuth (OpenID connect) support. This will be needed so users can authenticate with our progress API via the web app. Here is a short step by step guide how to do this, more info on this process can be found [here](https://cloud.google.com/appengine/docs/python/endpoints/auth#Python_Creating_OAuth_20_client_IDs).
 
   1. In the developer console navigate open *API Manager/Credentials* and create a new *OAuth client ID* credential.
   1. Select *Web application*.
@@ -35,11 +41,14 @@ Next, create new credentials for OAuth (OpenID connect) support. This will be ne
   1. Write down the generated `Client-ID`.
   1. In *API Manager/Credentials* create a *OAuth Consent Screen*. Default values are ok.
 
-Next, you need to to update the source with your `Client-ID` and `Project-ID` values.
+#### Get the source code
+Fork or download a [release](/releases) of this repository. Update the source using your `Client-ID` and `Project-ID` values.
 
-  1. In `backend/app.yaml` update `application: Project-ID`
-  1. In `backend/progress/constants.py` update `WEB_CLIENT_ID = 'Client-ID'`
-  1. In `backend/www/js/app.js` update `CLIENT_ID: 'Client-ID'`
+  - In `backend/app.yaml` update `application: Project-ID`
+  - In `backend/progress/constants.py` update `WEB_CLIENT_ID = 'Client-ID'`
+  - In `backend/www/js/app.js` update `CLIENT_ID: 'Client-ID'`
+
+#### Start the development server
 
 Install the [Google App Engine SDK for Python](https://cloud.google.com/appengine/downloads#Google_App_Engine_SDK_for_Python). At the time of writing the 1.9.30 was the most recent version. Navigate to the `backend` directory and run
 
