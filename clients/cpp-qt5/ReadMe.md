@@ -33,6 +33,11 @@ progress: 0
 ----------
 ```
 
+To create a new progress run
+```
+> progress create --key YOUR-API-KEY --title "My first progress" --desc "Informative description" --progress 10.0
+```
+
 Type
 
 ```
