@@ -28,11 +28,15 @@ public:
         _mgr = mgr;
     }
     
+    void setAddress(QString addr) {
+        _addr = addr;
+    }
+    
     public slots:
     void run()
     {
         
-        QUrl url(QString(PROGRESS_URL_BASE) + "list");
+        QUrl url(_addr + PROGRESS_URL_SUFFIX + "list");
         
         QUrlQuery query;
         query.addQueryItem("apikey", _apikey);
@@ -74,6 +78,7 @@ signals:
     
 private:
     QString _apikey;
+    QString _addr;
     QNetworkAccessManager *_mgr;
     QNetworkReply *_reply;
     
