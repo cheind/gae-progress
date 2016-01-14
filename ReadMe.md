@@ -34,7 +34,7 @@ Open the [Google Developer Console](https://console.developers.google.com), clic
 
 Next, you need to create new credentials for OAuth (OpenID connect) support. This will be needed so users can authenticate with our progress API via the web app. Here are the steps.
 
-  1. In the developer console navigate open *API Manager/Credentials* and create a new *OAuth client ID* credential.
+  1. In the developer console open *API Manager/Credentials* and create a new *OAuth client ID* credential.
   1. Select *Web application*.
   1. In *Authorized Javascript Origins* add `http://localhost:8080` and `https://Project-ID.appspot.com`.
   1. In *Authorized redirect URIs* add `http://localhost:8080/oauth2callback` and `https://Project-ID.appspot.com/oauth2callback`.
