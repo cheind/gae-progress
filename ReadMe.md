@@ -133,7 +133,7 @@ The web app runs in the clients browser. Web pages are served from the developme
 
 The web app supports full user management and progress management. Note that `progressApi` creates new users only from OpenID Connect authentication. Before using any other client you need sign in once using the web app.
 
-Browse [`backend/www`](backend/www) for more information. Try the [live demo](https://progress-1181.appspot.com).
+Browse [`backend/www`](backend/www) for more information or try the [live demo](https://progress-1181.appspot.com).
 
 #### Python-gapi client
 
