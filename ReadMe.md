@@ -131,6 +131,7 @@ Authenticated users (either via OpenID Connect or API key) are authorized to cre
  - [Web App](clients/www) - a AngularJS web application written in JavaScript.
  - [Python-gapi](clients/python-gapi) - A Python command line client using the Google APIs client library.
  - [Cpp/Qt](clients/cpp-qt5) - A C++ command line client using the Qt library.
+ - [Java](clients/java) - A Java command line client using generated code from Google Endpoints Tool.
 
 ## License
 ```
