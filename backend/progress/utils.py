@@ -1,5 +1,20 @@
 
+
 def ndbAttributesFromString(str, cls):
+    """Convert stringified sorting order to database properties.
+
+    Allows you to specify order such as '-lastUpdated,created',
+    meaning that you want to order first based on lastUpdated descending,
+    then on created ascending.
+
+    This code is merely taken from Endpoints Proto Datastore API
+    http://endpoints-proto-datastore.appspot.com/
+
+    Args:
+        str: Stringified sorting order.
+        cls: ndb.Model class with properties.
+    """
+
     if (not isinstance(str, basestring)):
         return None
 
