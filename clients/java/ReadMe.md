@@ -12,7 +12,8 @@ Use the [Google Endpoints Tool](https://cloud.google.com/appengine/docs/python/e
 
 This will generate a file called `progressApi-v1.zip` containing the necessary source files and dependencies. Alternatively, you can generate bundles for [Maven](https://maven.apache.org/) or [Gradle](http://gradle.org) as described in the docs.
 
-Generated sources are already included in the `src/com` directory.
+Generation has already been done for you. The necessary files have been placed in `src/com`,
+and `libs`directory.
 
 #### Running the application
 
