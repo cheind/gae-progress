@@ -8,9 +8,7 @@ This console client uses C++/Qt to interact with the RESTful `progressApi` servi
  - When asked point `PROGRESS_QT_INSTALL_PATH` to the install directory of Qt5.
  - Click generate.
 
-Open the resulting solution in your C++ IDE and update `apikey` field to match your API key. Verify that the URL is pointing to the correct server address. Build the solution. This should build an application named `progress`.
-
-To query your progresses you simply run
+Open the resulting solution in your C++ IDE and build the solution. This should build an application named `progress`. To query your progresses you simply run
 
 ```
 > progress list --key YOUR-API-KEY
