@@ -133,6 +133,10 @@ Authenticated users (either via OpenID Connect or API key) are authorized to cre
  - [Cpp/Qt](clients/cpp-qt5) - A C++ command line client using the Qt library.
  - [Java](clients/java) - A Java command line client using generated code from Google Endpoints Tool.
 
+## Acknowledgement
+
+This work is greatly sponsored by [PROFACTOR GmbH](http://www.profactor.at) - creators of [ReconstructMe](http://reconstructme.net).
+
 ## License
 ```
 Copyright Christoph Heindl 2016
